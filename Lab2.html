@@ -1,0 +1,3255 @@
+<!DOCTYPE html>
+<!-- saved from url=(0078)https://microsoft.github.io/mcs-labs/labs/core-concepts-agent-knowledge-tools/ -->
+<html lang="en-US" class="js" data-event-context="agent-in-a-day" style="--wc-panel-top: 76px; --font-scale: 1;"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+
+<!-- begin _includes/seo.html --><title>Build Intelligent Agents with Knowledge Sources, Tools, and Topics - Microsoft Copilot Agents Labs</title>
+<meta name="description" content="Learn how to create an AI agent from scratch in Microsoft Copilot Studio, enhance it with knowledge sources, extend its capabilities with tools, and build custom topics for structured conversations.">
+
+
+  <meta name="author" content="MCS Labs">
+  
+  <meta property="article:author" content="MCS Labs">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Microsoft Copilot Agents Labs">
+<meta property="og:title" content="Build Intelligent Agents with Knowledge Sources, Tools, and Topics">
+<meta property="og:url" content="https://microsoft.github.io/mcs-labs/labs/core-concepts-agent-knowledge-tools/">
+
+
+  <meta property="og:description" content="Learn how to create an AI agent from scratch in Microsoft Copilot Studio, enhance it with knowledge sources, extend its capabilities with tools, and build custom topics for structured conversations.">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2026-10-25T21:20:21+00:00">
+
+
+
+
+
+
+<link rel="canonical" href="#">
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="https://microsoft.github.io/mcs-labs/feed.xml" type="application/atom+xml" rel="alternate" title="Microsoft Copilot Agents Labs Feed">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+  window.enable_copy_code_button = true;
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="assets/main.css">
+<link rel="stylesheet" href="assets/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css"></noscript>
+
+
+
+    <!-- Pre-paint: apply stored theme + font-size before CSS loads (no FOUC).
+     Minimal Mistakes includes this file from its _includes/head.html. -->
+<script>
+(function () {
+  try {
+    var raw = localStorage.getItem('mcs-labs.prefs.v1');
+    if (!raw) return;
+    var p = JSON.parse(raw);
+    if (!p || p.schemaVersion !== 1) return;
+    if (p.theme && p.theme !== 'system' &&
+        (p.theme === 'light' || p.theme === 'dark' || p.theme === 'hc')) {
+      document.documentElement.setAttribute('data-theme', p.theme);
+    }
+    if (typeof p.fontScale === 'number' &&
+        p.fontScale >= 0.75 && p.fontScale <= 1.5) {
+      document.documentElement.style.setProperty('--font-scale', String(p.fontScale));
+    }
+  } catch (e) {}
+})();
+</script>
+
+  <meta name="react-scroll-to-bottom:version" content="4.2.0"><meta name="react-film" content="version=3.1.1-main.df870ea"><meta name="botframework-directlinespeech:version" content="4.18.0"><meta name="botframework-directlinespeech" content="version=4.18.0; build_tool=tsup; format=esmodules"><meta name="web-speech-cognitive-services" content="version=7.1.3"><meta name="botframework-webchat:api" content="version=4.18.0; build-tool=tsup; module-format=esmodules"><meta name="botframework-webchat:bundle" content="version=4.18.0; variant=full; build-tool=tsup; module-format=esmodules"><meta name="botframework-webchat:component" content="version=4.18.0; build-tool=tsup; module-format=esmodules"><meta name="botframework-webchat:core" content="version=4.18.0; build-tool=tsup; module-format=esmodules"><meta name="botframework-webchat:bundle:variant" content="full"><meta name="botframework-webchat:bundle:version" content="4.18.0"><meta name="botframework-webchat:core:version" content="4.18.0"><meta name="botframework-webchat:ui:version" content="4.18.0"><style id="fit-vids-style">.fluid-width-video-wrapper{width:100%;position:relative;padding:0;}.fluid-width-video-wrapper iframe,.fluid-width-video-wrapper object,.fluid-width-video-wrapper embed {position:absolute;top:0;left:0;width:100%;height:100%;}</style></head>
+
+  <body class="layout--lab" dir="ltr">
+    <nav class="skip-links">
+  <ul>
+    <li></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li></li>
+  </ul>
+</nav>
+
+    
+
+
+
+
+
+
+    <div class="initial-content" style="padding-top:2rem;">
+<div style="max-width:1100px;margin:0 auto;padding:18px 20px 14px 20px;border-bottom:3px solid #FF831D;display:flex;align-items:center;gap:18px;">
+  <img src="assets/columbus-logo.svg" alt="Columbus" style="height:30px;width:auto;flex:0 0 auto;">
+  <span style="font-family:Arial,Helvetica,sans-serif;font-size:0.9em;color:#02018C;letter-spacing:.04em;text-transform:uppercase;">Agent in a Day</span>
+</div>
+
+      
+
+
+
+
+  
+    
+
+
+
+
+
+<nav class="breadcrumbs" aria-label="Breadcrumbs">
+  <ol itemscope="" itemtype="https://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope="" itemtype="https://schema.org/ListItem"><a href="https://microsoft.github.io/mcs-labs/" itemprop="item"><span itemprop="name">Home</span></a><meta itemprop="position" content="1"></li><li itemprop="itemListElement" itemscope="" itemtype="https://schema.org/ListItem"><a href="https://microsoft.github.io/mcs-labs/workshops/" itemprop="item"><span itemprop="name">Workshops</span></a><meta itemprop="position" content="2"></li><li itemprop="itemListElement" itemscope="" itemtype="https://schema.org/ListItem"><a href="https://microsoft.github.io/mcs-labs/workshops/agent-in-a-day/" itemprop="item"><span itemprop="name">Agent in a Day</span></a><meta itemprop="position" content="3"></li><li class="current">Build Intelligent Agents with Knowledge Sources, Tools, and Topics</li></ol>
+</nav>
+
+  
+
+
+<div id="main" role="main">
+  
+
+
+  <article class="page" itemscope="" itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Build Intelligent Agents with Knowledge Sources, Tools, and Topics">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="2026-10-25T21:20:21+00:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">
+            <a href="#" itemprop="url">Build Intelligent Agents with Knowledge Sources, Tools, and Topics
+</a>
+          </h1>
+          
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-bookmark"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#lab-details">Lab Details</a></li><li><a href="#why-this-matters">Why This Matters</a></li><li><a href="#introduction">Introduction</a></li><li><a href="#core-concepts-overview">Core Concepts Overview</a></li><li><a href="#documentation-and-additional-training-links">Documentation and Additional Training Links</a></li><li><a href="#prerequisites">Prerequisites</a></li><li><a href="#summary-of-targets">Summary of Targets</a></li><li><a href="#use-cases-covered">Use Cases Covered</a></li><li><a href="#instructions-by-use-case">Instructions by Use Case</a></li><li><a href="#use-case-1-create-and-configure-your-first-agent">Use Case #1: Create and Configure Your First Agent</a><ul><li><a href="#objective">Objective</a></li><li><a href="#step-by-step-instructions">Step-by-step instructions</a></li><li><a href="#congratulations-youve-completed-use-case-1">Congratulations! You’ve completed Use Case 1!</a></li><li><a href="#test-your-understanding">Test your understanding</a></li></ul></li><li><a href="#use-case-2-enhance-agent-intelligence-with-knowledge-sources">Use Case #2: Enhance Agent Intelligence with Knowledge Sources</a><ul><li><a href="#objective-1">Objective</a></li><li><a href="#step-by-step-instructions-1">Step-by-step instructions</a></li><li><a href="#congratulations-youve-completed-use-case-2">Congratulations! You’ve completed Use Case 2!</a></li><li><a href="#test-your-understanding-1">Test your understanding</a></li></ul></li><li><a href="#use-case-3-extend-your-agent-with-tools">Use Case #3: Extend Your Agent with Tools</a><ul><li><a href="#objective-2">Objective</a></li><li><a href="#step-by-step-instructions-2">Step-by-step instructions</a></li><li><a href="#congratulations-youve-completed-use-case-3">Congratulations! You’ve completed Use Case 3!</a></li><li><a href="#test-your-understanding-2">Test your understanding</a></li></ul></li><li><a href="#use-case-4-build-custom-topics-for-structured-conversations">Use Case #4: Build Custom Topics for Structured Conversations</a><ul><li><a href="#objective-3">Objective</a></li><li><a href="#step-by-step-instructions-3">Step-by-step instructions</a></li><li><a href="#congratulations-youve-completed-use-case-4">Congratulations! You’ve completed Use Case 4!</a></li><li><a href="#test-your-understanding-3">Test your understanding</a></li></ul></li><li><a href="#summary-of-learnings">Summary of learnings</a><ul><li><a href="#conclusions-and-recommendations">Conclusions and recommendations</a></li></ul></li></ul>
+            </nav>
+          </aside>
+        
+        <style>
+/* Lab layout: hide default title and meta — we render our own */
+#page-title, .page__title { display: none !important; }
+.page__meta { display: none !important; }
+
+/* Lab markdown files repeat the title + description right after the front
+   matter — between two `---` rules — which produces a leading
+   <hr><h1><p><hr> quartet inside .page__content. The .lab-header above
+   already renders page.title + page.description, so this prefix is
+   redundant. Hide all four elements when the pattern matches. */
+.page__content > hr:first-of-type:has(+ h1 + p + hr),
+.page__content > hr:first-of-type:has(+ h1 + p + hr) + h1,
+.page__content > hr:first-of-type:has(+ h1 + p + hr) + h1 + p,
+.page__content > hr:first-of-type:has(+ h1 + p + hr) + h1 + p + hr {
+  display: none !important;
+}
+
+/* Hide the inline "## Table of Contents" section in lab markdown — the right
+   sidebar's "On this page" nav already provides this. Matches the heading,
+   the list immediately following, and the trailing <hr> separator. */
+.page__content > h2#table-of-contents,
+.page__content > h2#table-of-contents + ul,
+.page__content > h2#table-of-contents + ul + hr {
+  display: none !important;
+}
+
+/* The minimal-mistakes "On this page" sidebar is auto-built from heading IDs,
+   so it surfaces a "Table of Contents" entry even though the inline heading
+   is CSS-hidden above. Hide that entry too.
+   Direct selectors handle pa11y-ci / Puppeteer 9 (Chromium ~92) which does
+   not support :has(); the :has() rule is progressive enhancement for
+   Chrome 105+ to also collapse the parent <li>. */
+.toc__menu a[href="#table-of-contents"],
+.toc__menu a[href="#table-of-contents"] + ul {
+  display: none !important;
+}
+.toc__menu li:has(> a[href="#table-of-contents"]) {
+  display: none !important;
+}
+
+/* Fallback for browsers without :has() support (e.g. Chromium < 105, used by
+   pa11y-ci). If these two selectors were combined in a single rule, the whole
+   rule would be dropped in those browsers; keeping them separate ensures the
+   direct-anchor rule is applied independently. */
+.toc__menu a[href="#table-of-contents"] {
+  display: none !important;
+}
+</style><script type="application/json" id="mcs-events-manifest">
+[
+  {
+    "event_id": "agent-buildathon-1day",
+    "title": "Agent Buildathon (1 Day)",
+    "url": "/mcs-labs/events/agent-buildathon-1day/",
+    "kind": "event",
+    "schedule": [
+            {
+              "type": "lab",
+              "slug": "agent-builder-m365",
+              "label": "Lab 1",
+              "url": "/mcs-labs/labs/agent-builder-m365/",
+              "title": "Build Progressive AI Assistants with Agent Builder in Microsoft 365",
+              "difficulty": 100,
+              "duration": 30
+            },
+            {
+              "type": "lab",
+              "slug": "mbr-prep-sharepoint-agent",
+              "label": "Lab 2",
+              "url": "/mcs-labs/labs/mbr-prep-sharepoint-agent/",
+              "title": "Create a Monthly Business Review (MBR) Agent",
+              "difficulty": 100,
+              "duration": 20
+            }]
+  },
+  {
+    "event_id": "agent-buildathon-1month",
+    "title": "Agent Buildathon (1 Month)",
+    "url": "/mcs-labs/events/agent-buildathon-1month/",
+    "kind": "event",
+    "schedule": [
+            {
+              "type": "lab",
+              "slug": "agent-builder-m365",
+              "label": "Lab 1",
+              "url": "/mcs-labs/labs/agent-builder-m365/",
+              "title": "Build Progressive AI Assistants with Agent Builder in Microsoft 365",
+              "difficulty": 100,
+              "duration": 30
+            },
+            {
+              "type": "lab",
+              "slug": "setup-for-success",
+              "label": "Lab 2",
+              "url": "/mcs-labs/labs/setup-for-success/",
+              "title": "Set yourself up for success & discover ALM best practices",
+              "difficulty": 200,
+              "duration": 35
+            },
+            {
+              "type": "lab",
+              "slug": "core-concepts-agent-knowledge-tools",
+              "label": "Lab 3",
+              "url": "/mcs-labs/labs/core-concepts-agent-knowledge-tools/",
+              "title": "Build Intelligent Agents with Knowledge Sources, Tools, and Topics",
+              "difficulty": 200,
+              "duration": 45
+            },
+            {
+              "type": "lab",
+              "slug": "mbr-prep-sharepoint-agent",
+              "label": "Lab 4",
+              "url": "/mcs-labs/labs/mbr-prep-sharepoint-agent/",
+              "title": "Create a Monthly Business Review (MBR) Agent",
+              "difficulty": 100,
+              "duration": 20
+            },
+            {
+              "type": "lab",
+              "slug": "ask-me-anything",
+              "label": "Lab 5",
+              "url": "/mcs-labs/labs/ask-me-anything/",
+              "title": "Create an 'Ask me anything' agent for your employees",
+              "difficulty": 200,
+              "duration": 40
+            },
+            {
+              "type": "lab",
+              "slug": "autonomous-support-agent",
+              "label": "Lab 6",
+              "url": "/mcs-labs/labs/autonomous-support-agent/",
+              "title": "Autonomous Support Agent - Unlock new levels of productivity with AI automation",
+              "difficulty": 200,
+              "duration": 20
+            },
+            {
+              "type": "lab",
+              "slug": "autonomous-account-news",
+              "label": "Lab 7",
+              "url": "/mcs-labs/labs/autonomous-account-news/",
+              "title": "Build an Autonomous Account News Assistant Agent",
+              "difficulty": 200,
+              "duration": 30
+            },
+            {
+              "type": "lab",
+              "slug": "autonomous-cua",
+              "label": "Lab 8",
+              "url": "/mcs-labs/labs/autonomous-cua/",
+              "title": "Autonomous Portfolio Lookup Agent with Computer-Using Agents (CUA)",
+              "difficulty": 200,
+              "duration": 30
+            }]
+  },
+  {
+    "event_id": "bootcamp-v3",
+    "title": "Architecture Bootcamp - V3",
+    "url": "/mcs-labs/events/bootcamp-v3/",
+    "kind": "event",
+    "schedule": [
+            {
+              "type": "day",
+              "title": "Day 1 — Framing, On-ramp, Harnesses & Deep Dives"},
+            {
+              "type": "break",
+              "title": "Welcome", "time": "09:00", "duration": 15},
+            {
+              "type": "session",
+              "title": "Introduction to Hands-On Labs", "description": "Lab environment, tenant setup, and how the hands-on flow works across the three days.", "time": "09:15", "duration": 15},
+              {
+                "type": "module",
+                "slug": "agents-workflows-making-them-real",
+                "label": "Module 1",
+                "url": "/mcs-labs/modules/agents-workflows-making-them-real/",
+                "title": "Agents & Workflows — Making Them Real",
+                "difficulty": 100,
+                "duration": 45, "time": "09:30"},
+            {
+              "type": "break",
+              "title": "Coffee break / Q&A", "time": "10:15", "duration": 15},
+              {
+                "type": "module",
+                "slug": "m365-copilot",
+                "label": "Module 2",
+                "url": "/mcs-labs/modules/m365-copilot/",
+                "title": "M365 Copilot",
+                "difficulty": 100,
+                "duration": 30, "time": "10:30"},
+              {
+                "type": "lab",
+                "slug": "m365-copilot-frontier-agents",
+                "label": "Lab 1",
+                "url": "/mcs-labs/labs/m365-copilot-frontier-agents/",
+                "title": "M365 Copilot and Frontier Agents",
+                "difficulty": 100,
+                "duration": 30, "time": "11:00"},
+              {
+                "type": "module",
+                "slug": "cowork",
+                "label": "Module 3",
+                "url": "/mcs-labs/modules/cowork/",
+                "title": "Cowork (+ skills, + plugins)",
+                "difficulty": 100,
+                "duration": 30, "time": "11:30"},
+            {
+              "type": "break",
+              "title": "Lunch break", "time": "12:00", "duration": 60},
+              {
+                "type": "lab",
+                "slug": "cowork-hands-on",
+                "label": "Lab 2",
+                "url": "/mcs-labs/labs/cowork-hands-on/",
+                "title": "Cowork hands-on",
+                "difficulty": 200,
+                "duration": 45, "time": "13:00"},
+              {
+                "type": "module",
+                "slug": "harnesses-and-component-models",
+                "label": "Module 4",
+                "url": "/mcs-labs/modules/harnesses-and-component-models/",
+                "title": "Orchestration, Harnesses & Component Models — Overview",
+                "difficulty": 200,
+                "duration": 30, "time": "13:45"},
+              {
+                "type": "module",
+                "slug": "instructions-and-descriptions",
+                "label": "Module 5",
+                "url": "/mcs-labs/modules/instructions-and-descriptions/",
+                "title": "Deep Dive: Instructions & Descriptions",
+                "difficulty": 300,
+                "duration": 30, "time": "14:15"},
+              {
+                "type": "lab",
+                "slug": "mcs-instructions",
+                "label": "Lab 3",
+                "url": "/mcs-labs/labs/mcs-instructions/",
+                "title": "Deep Dive: Instructions & Descriptions",
+                "difficulty": 300,
+                "duration": 45, "time": "14:45"},
+            {
+              "type": "break",
+              "title": "Coffee break / Q&A", "time": "15:30", "duration": 15},
+              {
+                "type": "module",
+                "slug": "agent-skills",
+                "label": "Module 6",
+                "url": "/mcs-labs/modules/agent-skills/",
+                "title": "Deep Dive: Skills",
+                "difficulty": 300,
+                "duration": 30, "time": "15:45"},
+              {
+                "type": "lab",
+                "slug": "mcs-skills",
+                "label": "Lab 4",
+                "url": "/mcs-labs/labs/mcs-skills/",
+                "title": "Deep Dive: Skills",
+                "difficulty": 300,
+                "duration": 45, "time": "16:15"},
+            {
+              "type": "day",
+              "title": "Day 2 — Knowledge & Tools and the Dedicated Harnesses"},
+            {
+              "type": "break",
+              "title": "Re-Welcome / Re-cap", "time": "09:00", "duration": 15},
+              {
+                "type": "module",
+                "slug": "knowledge-and-tools-deep-dive",
+                "label": "Module 7",
+                "url": "/mcs-labs/modules/knowledge-and-tools-deep-dive/",
+                "title": "Deep Dive: Knowledge & Tools",
+                "difficulty": 300,
+                "duration": 45, "time": "09:15"},
+              {
+                "type": "lab",
+                "slug": "mcs-tools",
+                "label": "Lab 5",
+                "url": "/mcs-labs/labs/mcs-tools/",
+                "title": "Deep Dive: Knowledge & Tools",
+                "difficulty": 300,
+                "duration": 30, "time": "10:00"},
+            {
+              "type": "break",
+              "title": "Coffee break / Q&A", "time": "10:30", "duration": 15},
+              {
+                "type": "module",
+                "slug": "copilot-harness",
+                "label": "Module 8",
+                "url": "/mcs-labs/modules/copilot-harness/",
+                "title": "Dedicated: Copilot harness — Agent Builder, pro-code DAs, DAs in MCS",
+                "difficulty": 200,
+                "duration": 45, "time": "10:45"},
+              {
+                "type": "lab",
+                "slug": "copilot-harness-agent-builder",
+                "label": "Lab 6",
+                "url": "/mcs-labs/labs/copilot-harness-agent-builder/",
+                "title": "Copilot harness — Agent Builder",
+                "difficulty": 200,
+                "duration": 30, "time": "11:30"},
+            {
+              "type": "break",
+              "title": "Lunch break", "time": "12:00", "duration": 60},
+              {
+                "type": "module",
+                "slug": "standard-harness",
+                "label": "Module 9",
+                "url": "/mcs-labs/modules/standard-harness/",
+                "title": "Dedicated: Standard harness — Component Model",
+                "difficulty": 200,
+                "duration": 30, "time": "13:00"},
+              {
+                "type": "lab",
+                "slug": "standard-harness-component-model",
+                "label": "Lab 7",
+                "url": "/mcs-labs/labs/standard-harness-component-model/",
+                "title": "Standard harness — Component Model",
+                "difficulty": 200,
+                "duration": 45, "time": "13:30"},
+            {
+              "type": "break",
+              "title": "Coffee break / Q&A", "time": "14:15", "duration": 15},
+              {
+                "type": "module",
+                "slug": "github-copilot-harness",
+                "label": "Module 10",
+                "url": "/mcs-labs/modules/github-copilot-harness/",
+                "title": "Dedicated: GitHub Copilot harness — Component Model",
+                "difficulty": 300,
+                "duration": 60, "time": "14:30"},
+              {
+                "type": "lab",
+                "slug": "mcs-github-harness",
+                "label": "Lab 8",
+                "url": "/mcs-labs/labs/mcs-github-harness/",
+                "title": "GitHub Copilot harness — Component Model",
+                "difficulty": 300,
+                "duration": 30, "time": "15:30"},
+              {
+                "type": "module",
+                "slug": "creation-github-harness",
+                "label": "Module 11",
+                "url": "/mcs-labs/modules/creation-github-harness/",
+                "title": "Creation — GitHub harness (from UX, from Chat)",
+                "difficulty": 200,
+                "duration": 30, "time": "16:00"},
+            {
+              "type": "break",
+              "title": "Social / Networking", "time": "16:30", "duration": 90},
+            {
+              "type": "day",
+              "title": "Day 3 — Workflows & Operations"},
+            {
+              "type": "break",
+              "title": "Re-Welcome / Re-cap / Quiz", "time": "09:00", "duration": 30},
+              {
+                "type": "module",
+                "slug": "workflows",
+                "label": "Module 12",
+                "url": "/mcs-labs/modules/workflows/",
+                "title": "Workflows",
+                "difficulty": 300,
+                "duration": 45, "time": "09:30", "slides": "https://github.com/microsoft/mcs-labs/raw/main/presentations/bootcamp-v3/M12.%20Workflows.pptx"},
+            {
+              "type": "break",
+              "title": "Coffee break / Q&A", "time": "10:15", "duration": 15},
+              {
+                "type": "lab",
+                "slug": "mcs-workflows",
+                "label": "Lab 9",
+                "url": "/mcs-labs/labs/mcs-workflows/",
+                "title": "Workflows",
+                "difficulty": 300,
+                "duration": 60, "time": "10:30"},
+              {
+                "type": "module",
+                "slug": "multi-agent",
+                "label": "Module 13",
+                "url": "/mcs-labs/modules/multi-agent/",
+                "title": "Multi-Agent",
+                "difficulty": 200,
+                "duration": 30, "time": "11:30", "slides": "https://github.com/microsoft/mcs-labs/raw/main/presentations/bootcamp-v3/M13.%20Multi-Agent.pptx"},
+            {
+              "type": "break",
+              "title": "Lunch break", "time": "12:00", "duration": 60},
+              {
+                "type": "module",
+                "slug": "alm-and-analytics",
+                "label": "Module 14",
+                "url": "/mcs-labs/modules/alm-and-analytics/",
+                "title": "ALM — Traditional, Component Collections + Reporting, Analytics & Evals",
+                "difficulty": 300,
+                "duration": 30, "time": "13:00"},
+              {
+                "type": "module",
+                "slug": "coding-agents",
+                "label": "Module 15",
+                "url": "/mcs-labs/modules/coding-agents/",
+                "title": "Coding Agents — plugin, migration, new creation",
+                "difficulty": 300,
+                "duration": 30, "time": "13:30"},
+            {
+              "type": "break",
+              "title": "Coffee break / Q&A", "time": "14:00", "duration": 15},
+              {
+                "type": "module",
+                "slug": "ai-finops",
+                "label": "Module 16",
+                "url": "/mcs-labs/modules/ai-finops/",
+                "title": "AI FinOps",
+                "difficulty": 200,
+                "duration": 60, "time": "14:15"},
+            {
+              "type": "break",
+              "title": "General Q&A", "time": "15:15", "duration": 45},
+            {
+              "type": "day",
+              "title": "Continue on your own — optional labs"},
+            {
+              "type": "link",
+              "title": "Multi-Agent — extends M13", "description": "Build a main agent with child agents for product and account information. 30 min.", "url": "/mcs-labs/labs/mcs-multi-agent/"},
+            {
+              "type": "link",
+              "title": "ALM — extends M14", "description": "Solutions, environment variables, connection references and deployment pipelines. 45 min.", "url": "/mcs-labs/labs/mcs-alm/"},
+            {
+              "type": "link",
+              "title": "Component Collections — extends M14", "description": "Build, share and version component collections across agents. 30 min.", "url": "/mcs-labs/labs/component-collections/"},
+            {
+              "type": "link",
+              "title": "Analytics and Evaluations — extends M14", "description": "Monitor performance, configure evaluation test sets and review results. 30 min.", "url": "/mcs-labs/labs/core-concepts-analytics-evaluations/"},
+            {
+              "type": "link",
+              "title": "Governance", "description": "DLP-restricted agents across green, yellow and red zones. 45 min.", "url": "/mcs-labs/labs/mcs-governance/"}]
+  },
+  {
+    "event_id": "bootcamp",
+    "title": "Architecture Bootcamp",
+    "url": "/mcs-labs/events/bootcamp/",
+    "kind": "event",
+    "schedule": [
+            {
+              "type": "day",
+              "title": "Day 1"},
+            {
+              "type": "break",
+              "title": "Welcome + Breakout", "time": "09:00", "duration": 15},
+            {
+              "type": "session",
+              "title": "Introduction to Hands-On Labs", "description": "Overview of the lab environment, setup instructions, and expectations.", "time": "09:15", "duration": 15},
+              {
+                "type": "module",
+                "slug": "agent-builder",
+                "label": "Module 1",
+                "url": "/mcs-labs/modules/agent-builder/",
+                "title": "M365 Agent Builder",
+                "difficulty": 100,
+                "duration": 30, "time": "09:30"},
+            {
+              "type": "break",
+              "title": "Coffee break / Q&A", "time": "10:00", "duration": 15},
+              {
+                "type": "lab",
+                "slug": "agent-builder-m365",
+                "label": "Lab 1",
+                "url": "/mcs-labs/labs/agent-builder-m365/",
+                "title": "M365 Agent Builder",
+                "difficulty": 100,
+                "duration": 30, "time": "10:15"},
+              {
+                "type": "module",
+                "slug": "core-concepts-part1",
+                "label": "Module 2",
+                "url": "/mcs-labs/modules/core-concepts-part1/",
+                "title": "Copilot Studio Core Concepts - Part 1",
+                "difficulty": 100,
+                "duration": 30, "time": "10:45"},
+              {
+                "type": "lab",
+                "slug": "core-concepts-agent-knowledge-tools",
+                "label": "Lab 2",
+                "url": "/mcs-labs/labs/core-concepts-agent-knowledge-tools/",
+                "title": "Creation, Topics, Knowledge, and Tools",
+                "difficulty": 200,
+                "duration": 45, "time": "11:15"},
+            {
+              "type": "break",
+              "title": "Lunch break", "time": "12:00", "duration": 60},
+            {
+              "type": "break",
+              "title": "Quiz Time / Review / AMA / Flex", "time": "13:00", "duration": 15},
+              {
+                "type": "module",
+                "slug": "core-concepts-part2",
+                "label": "Module 3",
+                "url": "/mcs-labs/modules/core-concepts-part2/",
+                "title": "Copilot Studio Core Concepts - Part 2",
+                "difficulty": 200,
+                "duration": 30, "time": "13:15"},
+              {
+                "type": "lab",
+                "slug": "core-concepts-variables-agents-channels",
+                "label": "Lab 3",
+                "url": "/mcs-labs/labs/core-concepts-variables-agents-channels/",
+                "title": "Variables, Agents, and Channels",
+                "difficulty": 200,
+                "duration": 30, "time": "13:45"},
+              {
+                "type": "module",
+                "slug": "core-concepts-part3",
+                "label": "Module 4",
+                "url": "/mcs-labs/modules/core-concepts-part3/",
+                "title": "Copilot Studio Core Concepts - Part 3",
+                "difficulty": 200,
+                "duration": 30, "time": "14:30"},
+            {
+              "type": "break",
+              "title": "Coffee break / Q&A", "time": "15:00", "duration": 15},
+              {
+                "type": "lab",
+                "slug": "core-concepts-analytics-evaluations",
+                "label": "Lab 4",
+                "url": "/mcs-labs/labs/core-concepts-analytics-evaluations/",
+                "title": "Analytics and Evaluations",
+                "difficulty": 200,
+                "duration": 30, "time": "15:15"},
+              {
+                "type": "module",
+                "slug": "azure-integration",
+                "label": "Module 5",
+                "url": "/mcs-labs/modules/azure-integration/",
+                "title": "Azure Integration /w Demo",
+                "difficulty": 200,
+                "duration": 30, "time": "15:45"},
+            {
+              "type": "break",
+              "title": "Open AMA", "time": "16:15", "duration": 30},
+            {
+              "type": "day",
+              "title": "Day 2"},
+            {
+              "type": "break",
+              "title": "Re-Welcome / Re-cap / Quiz", "time": "09:00", "duration": 15},
+              {
+                "type": "module",
+                "slug": "alm",
+                "label": "Module 6",
+                "url": "/mcs-labs/modules/alm/",
+                "title": "ALM - Solutions, Environment Variables, Connection References, and Pipelines",
+                "difficulty": 300,
+                "duration": 30, "time": "09:15"},
+              {
+                "type": "lab",
+                "slug": "mcs-alm",
+                "label": "Lab 5",
+                "url": "/mcs-labs/labs/mcs-alm/",
+                "title": "Export / Import Solutions, Environment Variables, Connection References, and Pipelines",
+                "difficulty": 300,
+                "duration": 45, "time": "09:45"},
+            {
+              "type": "break",
+              "title": "Coffee break / Q&A", "time": "10:30", "duration": 15},
+              {
+                "type": "module",
+                "slug": "component-collections",
+                "label": "Module 7",
+                "url": "/mcs-labs/modules/component-collections/",
+                "title": "ALM - Component Collections",
+                "difficulty": 200,
+                "duration": 30, "time": "10:45"},
+              {
+                "type": "lab",
+                "slug": "component-collections",
+                "label": "Lab 6",
+                "url": "/mcs-labs/labs/component-collections/",
+                "title": "Component Collections",
+                "difficulty": 300,
+                "duration": 45, "time": "11:15"},
+            {
+              "type": "break",
+              "title": "Lunch break", "time": "12:00", "duration": 60},
+              {
+                "type": "module",
+                "slug": "tools-overview",
+                "label": "Module 8",
+                "url": "/mcs-labs/modules/tools-overview/",
+                "title": "Tools",
+                "difficulty": 300,
+                "duration": 30, "time": "13:00"},
+              {
+                "type": "lab",
+                "slug": "mcs-tools",
+                "label": "Lab 7",
+                "url": "/mcs-labs/labs/mcs-tools/",
+                "title": "Tools",
+                "difficulty": 300,
+                "duration": 30, "time": "13:30"},
+              {
+                "type": "module",
+                "slug": "orchestration",
+                "label": "Module 9",
+                "url": "/mcs-labs/modules/orchestration/",
+                "title": "Orchestration and Dynamic Chaining Concepts w/ Demos",
+                "difficulty": 300,
+                "duration": 45, "time": "14:30"},
+              {
+                "type": "lab",
+                "slug": "mcs-orchestration",
+                "label": "Lab 8",
+                "url": "/mcs-labs/labs/mcs-orchestration/",
+                "title": "Orchestration with Copilot Studio",
+                "difficulty": 300,
+                "duration": 60, "time": "15:15"},
+            {
+              "type": "break",
+              "title": "Networking time", "time": "16:15", "duration": 60},
+            {
+              "type": "day",
+              "title": "Day 3"},
+            {
+              "type": "break",
+              "title": "Re-Welcome / Re-cap / Quiz", "time": "09:00", "duration": 15},
+              {
+                "type": "module",
+                "slug": "governance",
+                "label": "Module 10",
+                "url": "/mcs-labs/modules/governance/",
+                "title": "Governance",
+                "difficulty": 300,
+                "duration": 30, "time": "09:15"},
+              {
+                "type": "lab",
+                "slug": "mcs-governance",
+                "label": "Lab 9",
+                "url": "/mcs-labs/labs/mcs-governance/",
+                "title": "Governance - DLP",
+                "difficulty": 300,
+                "duration": 30, "time": "09:45"},
+            {
+              "type": "break",
+              "title": "Coffee break / Q&A", "time": "10:30", "duration": 15},
+              {
+                "type": "module",
+                "slug": "multi-agent",
+                "label": "Module 11",
+                "url": "/mcs-labs/modules/multi-agent/",
+                "title": "Multi-Agent",
+                "difficulty": 200,
+                "duration": 45, "time": "10:45"},
+              {
+                "type": "lab",
+                "slug": "mcs-multi-agent",
+                "label": "Lab 10",
+                "url": "/mcs-labs/labs/mcs-multi-agent/",
+                "title": "Multi-Agent",
+                "difficulty": 300,
+                "duration": 30, "time": "11:30"},
+            {
+              "type": "break",
+              "title": "Lunch break", "time": "12:00", "duration": 60},
+            {
+              "type": "break",
+              "title": "Quiz Time / Review / AMA / Flex / Guest Speaker", "time": "13:00", "duration": 15},
+              {
+                "type": "module",
+                "slug": "autonomous-agents",
+                "label": "Module 12",
+                "url": "/mcs-labs/modules/autonomous-agents/",
+                "title": "Autonomous Agents",
+                "difficulty": 300,
+                "duration": 30, "time": "13:15"},
+              {
+                "type": "lab",
+                "slug": "autonomous-account-news",
+                "label": "Lab 11",
+                "url": "/mcs-labs/labs/autonomous-account-news/",
+                "title": "Autonomous Agents",
+                "difficulty": 200,
+                "duration": 30, "time": "13:45"},
+              {
+                "type": "module",
+                "slug": "copilot-studio-plugin",
+                "label": "Module 13",
+                "url": "/mcs-labs/modules/copilot-studio-plugin/",
+                "title": "Copilot Studio Plugin for GitHub Copilot CLI and Claude Code",
+                "difficulty": 300,
+                "duration": 30, "time": "14:45"},
+            {
+              "type": "break",
+              "title": "Coffee break / Q&A", "time": "15:15", "duration": 15},
+              {
+                "type": "module",
+                "slug": "agent-365",
+                "label": "Module 14",
+                "url": "/mcs-labs/modules/agent-365/",
+                "title": "Agent 365 w/ Demo",
+                "difficulty": 200,
+                "duration": 30, "time": "15:30"},
+            {
+              "type": "break",
+              "title": "General Q&A", "time": "16:00", "duration": 30}]
+  },
+  {
+    "event_id": "advanced-agent-in-a-day",
+    "title": "Advanced Agent in a Day",
+    "url": "/mcs-labs/workshops/advanced-agent-in-a-day/",
+    "kind": "workshop",
+    "schedule": [
+            {
+              "type": "session",
+              "title": "Welcome + Introductions", "description": "Meet your instructor, review the day, and confirm the 300-level prerequisites (agent creation, topics, knowledge sources, and variables).", "time": "09:00", "duration": 15},
+              {
+                "type": "module",
+                "slug": "copilot-studio-core-concepts-overview",
+                "label": "Module 1",
+                "url": "/mcs-labs/modules/copilot-studio-core-concepts-overview/",
+                "title": "Copilot Studio Core Concepts Overview",
+                "difficulty": 200,
+                "duration": 30, "time": "09:15"},
+              {
+                "type": "module",
+                "slug": "tools-overview",
+                "label": "Module 2",
+                "url": "/mcs-labs/modules/tools-overview/",
+                "title": "Copilot Studio Tools",
+                "difficulty": 300,
+                "duration": 30, "time": "09:45"},
+            {
+              "type": "break",
+              "title": "Coffee break / Q&A", "time": "10:15", "duration": 15},
+              {
+                "type": "lab",
+                "slug": "mcs-tools",
+                "label": "Lab 1",
+                "url": "/mcs-labs/labs/mcs-tools/",
+                "title": "Tools",
+                "difficulty": 300,
+                "duration": 30, "time": "10:30"},
+              {
+                "type": "module",
+                "slug": "orchestration",
+                "label": "Module 3",
+                "url": "/mcs-labs/modules/orchestration/",
+                "title": "Orchestration and Dynamic Chaining",
+                "difficulty": 300,
+                "duration": 45, "time": "11:30"},
+            {
+              "type": "break",
+              "title": "Lunch break", "time": "12:15", "duration": 60},
+              {
+                "type": "lab",
+                "slug": "mcs-orchestration",
+                "label": "Lab 2",
+                "url": "/mcs-labs/labs/mcs-orchestration/",
+                "title": "Orchestration with Copilot Studio",
+                "difficulty": 300,
+                "duration": 60, "time": "13:15"},
+              {
+                "type": "module",
+                "slug": "workflows",
+                "label": "Module 4",
+                "url": "/mcs-labs/modules/workflows/",
+                "title": "Workflows",
+                "difficulty": 300,
+                "duration": 30, "time": "14:15"},
+            {
+              "type": "break",
+              "title": "Coffee break / Q&A", "time": "14:45", "duration": 15},
+              {
+                "type": "lab",
+                "slug": "mcs-workflows",
+                "label": "Lab 3",
+                "url": "/mcs-labs/labs/mcs-workflows/",
+                "title": "Workflows",
+                "difficulty": 300,
+                "duration": 45, "time": "15:00"},
+              {
+                "type": "module",
+                "slug": "copilot-studio-plugin",
+                "label": "Module 5",
+                "url": "/mcs-labs/modules/copilot-studio-plugin/",
+                "title": "Copilot Studio Plugin for Developer Tools",
+                "difficulty": 300,
+                "duration": 30, "time": "16:00"}]
+  },
+  {
+    "event_id": "agent-academy-commander",
+    "title": "Agent Academy - Commander",
+    "url": "/mcs-labs/workshops/agent-academy-commander/",
+    "kind": "workshop",
+    "schedule": []
+  },
+  {
+    "event_id": "agent-academy-operative",
+    "title": "Agent Academy - Operative",
+    "url": "/mcs-labs/workshops/agent-academy-operative/",
+    "kind": "workshop",
+    "schedule": []
+  },
+  {
+    "event_id": "agent-academy-recruit",
+    "title": "Agent Academy - Recruit",
+    "url": "/mcs-labs/workshops/agent-academy-recruit/",
+    "kind": "workshop",
+    "schedule": [
+            {
+              "type": "lab",
+              "slug": "agent-academy-recruit",
+              "label": "Full Course",
+              "url": "/mcs-labs/labs/agent-academy-recruit/",
+              "title": "Copilot Studio Agent Academy - Recruit Level",
+              "difficulty": 200,
+              "duration": 240
+            }]
+  },
+  {
+    "event_id": "agent-in-a-day-v3",
+    "title": "Agent in a Day v3",
+    "url": "/mcs-labs/workshops/agent-in-a-day-v3/",
+    "kind": "workshop",
+    "schedule": [
+            {
+              "type": "break",
+              "title": "Registration, Breakfast & Networking", "time": "07:30", "duration": 30},
+            {
+              "type": "session",
+              "title": "Welcome & Program Overview", "description": "Meet your instructors, review the day, and set expectations.", "time": "08:00", "duration": 15},
+            {
+              "type": "session",
+              "title": "Introduction to Hands-On Labs", "description": "Lab environment, tenant setup, and how the hands-on flow works through the day.", "time": "08:15", "duration": 15},
+              {
+                "type": "module",
+                "slug": "agents-workflows-making-them-real",
+                "label": "Module 1",
+                "url": "/mcs-labs/modules/agents-workflows-making-them-real/",
+                "title": "Agents & Workflows — Making Them Real",
+                "difficulty": 100,
+                "duration": 30, "time": "08:30"},
+              {
+                "type": "module",
+                "slug": "m365-copilot",
+                "label": "Module 2",
+                "url": "/mcs-labs/modules/m365-copilot/",
+                "title": "M365 Copilot",
+                "difficulty": 100,
+                "duration": 30, "time": "09:00"},
+              {
+                "type": "lab",
+                "slug": "m365-copilot-frontier-agents",
+                "label": "Lab 1",
+                "url": "/mcs-labs/labs/m365-copilot-frontier-agents/",
+                "title": "M365 Copilot & Frontier Agents",
+                "difficulty": 100,
+                "duration": 30, "time": "09:30"},
+            {
+              "type": "break",
+              "title": "Coffee & Refreshments", "time": "10:00", "duration": 15},
+              {
+                "type": "module",
+                "slug": "cowork",
+                "label": "Module 3",
+                "url": "/mcs-labs/modules/cowork/",
+                "title": "Cowork (+ skills, + plugins)",
+                "difficulty": 100,
+                "duration": 30, "time": "10:15"},
+              {
+                "type": "lab",
+                "slug": "cowork-hands-on",
+                "label": "Lab 2",
+                "url": "/mcs-labs/labs/cowork-hands-on/",
+                "title": "Cowork Hands-On",
+                "difficulty": 200,
+                "duration": 30, "time": "10:45"},
+              {
+                "type": "module",
+                "slug": "harnesses-and-component-models",
+                "label": "Module 4",
+                "url": "/mcs-labs/modules/harnesses-and-component-models/",
+                "title": "Orchestration, Harnesses & Component Models — Overview",
+                "difficulty": 200,
+                "duration": 30, "time": "11:15"},
+            {
+              "type": "session",
+              "title": "Fireside Chat / Q&A", "description": "Open discussion with the instructors — architecture questions, adoption experience, and what to take back.", "time": "11:45", "duration": 15},
+            {
+              "type": "break",
+              "title": "Lunch & Networking", "time": "12:00", "duration": 45},
+              {
+                "type": "module",
+                "slug": "copilot-harness",
+                "label": "Module 5",
+                "url": "/mcs-labs/modules/copilot-harness/",
+                "title": "Copilot Harness: Agent Builder, pro-code DAs, DAs in MCS",
+                "difficulty": 200,
+                "duration": 30, "time": "12:45"},
+              {
+                "type": "lab",
+                "slug": "copilot-harness-agent-builder",
+                "label": "Lab 3",
+                "url": "/mcs-labs/labs/copilot-harness-agent-builder/",
+                "title": "Copilot Harness",
+                "difficulty": 200,
+                "duration": 30, "time": "13:15"},
+              {
+                "type": "module",
+                "slug": "github-copilot-harness",
+                "label": "Module 6",
+                "url": "/mcs-labs/modules/github-copilot-harness/",
+                "title": "GitHub Copilot Harness: Component Model",
+                "difficulty": 300,
+                "duration": 45, "time": "13:45"},
+            {
+              "type": "break",
+              "title": "Coffee & Refreshments", "time": "14:30", "duration": 15},
+              {
+                "type": "lab",
+                "slug": "mcs-github-harness",
+                "label": "Lab 4",
+                "url": "/mcs-labs/labs/mcs-github-harness/",
+                "title": "GitHub Copilot Harness: Component Model",
+                "difficulty": 300,
+                "duration": 45, "time": "14:45"},
+              {
+                "type": "module",
+                "slug": "workflows",
+                "label": "Module 7",
+                "url": "/mcs-labs/modules/workflows/",
+                "title": "Workflows",
+                "difficulty": 300,
+                "duration": 30, "time": "15:30", "slides": "https://github.com/microsoft/mcs-labs/raw/main/presentations/bootcamp-v3/M12.%20Workflows.pptx"},
+              {
+                "type": "lab",
+                "slug": "mcs-workflows",
+                "label": "Lab 5",
+                "url": "/mcs-labs/labs/mcs-workflows/",
+                "title": "Workflows",
+                "difficulty": 300,
+                "duration": 45, "time": "16:00"},
+            {
+              "type": "session",
+              "title": "Closing Remarks / Ask Me Anything", "description": "Wrap-up, where to go next, and an open floor for questions.", "time": "16:45", "duration": 30}]
+  },
+  {
+    "event_id": "agent-in-a-day",
+    "title": "Agent in a Day",
+    "url": "/mcs-labs/workshops/agent-in-a-day/",
+    "kind": "workshop",
+    "schedule": [
+            {
+              "type": "session",
+              "title": "Welcome + Kickoff", "description": "Meet your instructor, review the day, and set expectations.", "time": "09:00", "duration": 15},
+            {
+              "type": "session",
+              "title": "Introduction to Hands-On Labs", "description": "Overview of the lab environment, setup instructions, and how the day flows.", "time": "09:15", "duration": 15},
+              {
+                "type": "module",
+                "slug": "agent-builder",
+                "label": "Module 1",
+                "url": "/mcs-labs/modules/agent-builder/",
+                "title": "M365 Agent Builder",
+                "difficulty": 100,
+                "duration": 30, "time": "09:30"},
+            {
+              "type": "break",
+              "title": "Coffee break / Q&A", "time": "10:00", "duration": 15},
+              {
+                "type": "lab",
+                "slug": "agent-builder-m365",
+                "label": "Lab 1",
+                "url": "/mcs-labs/labs/agent-builder-m365/",
+                "title": "M365 Agent Builder",
+                "difficulty": 100,
+                "duration": 30, "time": "10:15"},
+              {
+                "type": "module",
+                "slug": "core-concepts-part1",
+                "label": "Module 2",
+                "url": "/mcs-labs/modules/core-concepts-part1/",
+                "title": "Copilot Studio Core Concepts - Part 1",
+                "difficulty": 100,
+                "duration": 30, "time": "10:45"},
+              {
+                "type": "lab",
+                "slug": "core-concepts-agent-knowledge-tools",
+                "label": "Lab 2",
+                "url": "/mcs-labs/labs/core-concepts-agent-knowledge-tools/",
+                "title": "Creation, Topics, Knowledge, and Tools",
+                "difficulty": 200,
+                "duration": 45, "time": "11:15"},
+            {
+              "type": "break",
+              "title": "Lunch break", "time": "12:00", "duration": 60},
+              {
+                "type": "module",
+                "slug": "core-concepts-part2",
+                "label": "Module 3",
+                "url": "/mcs-labs/modules/core-concepts-part2/",
+                "title": "Copilot Studio Core Concepts - Part 2",
+                "difficulty": 200,
+                "duration": 30, "time": "13:00"},
+              {
+                "type": "lab",
+                "slug": "core-concepts-variables-agents-channels",
+                "label": "Lab 3",
+                "url": "/mcs-labs/labs/core-concepts-variables-agents-channels/",
+                "title": "Variables, Agents, and Channels",
+                "difficulty": 200,
+                "duration": 30, "time": "13:30"},
+            {
+              "type": "break",
+              "title": "Coffee break / Q&A", "time": "14:00", "duration": 15},
+              {
+                "type": "module",
+                "slug": "orchestration",
+                "label": "Module 4",
+                "url": "/mcs-labs/modules/orchestration/",
+                "title": "Orchestration and Dynamic Chaining",
+                "difficulty": 300,
+                "duration": 45, "time": "14:15"},
+              {
+                "type": "lab",
+                "slug": "mcs-orchestration",
+                "label": "Lab 4",
+                "url": "/mcs-labs/labs/mcs-orchestration/",
+                "title": "Orchestration with Copilot Studio",
+                "difficulty": 300,
+                "duration": 60, "time": "15:00"}]
+  },
+  {
+    "event_id": "azure-ai-workshop",
+    "title": "Azure AI Workshop",
+    "url": "/mcs-labs/workshops/azure-ai-workshop/",
+    "kind": "workshop",
+    "schedule": [
+            {
+              "type": "lab",
+              "slug": "dataverse-mcp-connector",
+              "label": "Lab 1",
+              "url": "/mcs-labs/labs/dataverse-mcp-connector/",
+              "title": "Contoso Agent and Dataverse MCP Connector - Build an AI Agent with Live Data Integration",
+              "difficulty": 100,
+              "duration": 30
+            },
+            {
+              "type": "lab",
+              "slug": "contract-alerts-azure-ai",
+              "label": "Lab 2",
+              "url": "/mcs-labs/labs/contract-alerts-azure-ai/",
+              "title": "Proactive Contract Alerts in Teams with Azure AI Search and Speech-to-Text - Build Intelligent Event-Driven Agents",
+              "difficulty": 200,
+              "duration": 70
+            },
+            {
+              "type": "lab",
+              "slug": "mcs-byom",
+              "label": "Lab 3",
+              "url": "/mcs-labs/labs/mcs-byom/",
+              "title": "Bring Your Own Model (BYOM) Tool in Copilot Studio",
+              "difficulty": 200,
+              "duration": 40
+            },
+            {
+              "type": "lab",
+              "slug": "guildhall-custom-mcp",
+              "label": "Lab 4",
+              "url": "/mcs-labs/labs/guildhall-custom-mcp/",
+              "title": "Quest: Build and Connect Your Guild's Custom MCP Server",
+              "difficulty": 200,
+              "duration": 65
+            },
+            {
+              "type": "lab",
+              "slug": "data-fabric-agent",
+              "label": "Lab 5",
+              "url": "/mcs-labs/labs/data-fabric-agent/",
+              "title": "Connecting Fabric Data Agents with Microsoft Copilot Studio",
+              "difficulty": 200,
+              "duration": 20
+            }]
+  },
+  {
+    "event_id": "ghcp-in-a-day",
+    "title": "Deep dive in modern agents",
+    "url": "/mcs-labs/workshops/ghcp-in-a-day/",
+    "kind": "workshop",
+    "schedule": [
+            {
+              "type": "session",
+              "title": "Welcome & Intro", "time": "09:00", "duration": 30},
+            {
+              "type": "session",
+              "title": "Intro to Hands-On Labs", "time": "09:30", "duration": 15},
+              {
+                "type": "module",
+                "slug": "ghcp-in-a-day-when-to-use-what",
+                "label": "Module 1",
+                "url": "/mcs-labs/modules/ghcp-in-a-day-when-to-use-what/",
+                "title": "When to Use What?",
+                "difficulty": 200,
+                "duration": 15, "time": "09:45", "slides": "https://github.com/microsoft/mcs-labs/raw/main/presentations/ghcp-in-a-day/Module%201%20-%20When%20to%20Use%20What.pptx"},
+            {
+              "type": "break",
+              "title": "Coffee break", "time": "10:00", "duration": 15},
+              {
+                "type": "module",
+                "slug": "ghcp-in-a-day-cowork",
+                "label": "Module 2",
+                "url": "/mcs-labs/modules/ghcp-in-a-day-cowork/",
+                "title": "Cowork (+ skills, + plugins)",
+                "difficulty": 100,
+                "duration": 15, "time": "10:15", "slides": "https://github.com/microsoft/mcs-labs/raw/main/presentations/ghcp-in-a-day/Module%202%20-%20Cowork%20-%20skills%20%26%20plugins.pptx"},
+              {
+                "type": "lab",
+                "slug": "cowork-plugins-hands-on",
+                "label": "Lab 1",
+                "url": "/mcs-labs/labs/cowork-plugins-hands-on/",
+                "title": "Cowork + Plugins Hands-On Lab",
+                "difficulty": 200,
+                "duration": 30, "time": "10:30"},
+              {
+                "type": "module",
+                "slug": "ghcp-in-a-day-github-copilot-harness",
+                "label": "Module 3",
+                "url": "/mcs-labs/modules/ghcp-in-a-day-github-copilot-harness/",
+                "title": "GitHub Copilot UI, Orchestration and Harnesses",
+                "difficulty": 300,
+                "duration": 15, "time": "11:00", "slides": "https://github.com/microsoft/mcs-labs/raw/main/presentations/ghcp-in-a-day/Module%203%20-%20GHCP%20UI%2C%20Orchestration%2C%20Harnesses.pptx"},
+              {
+                "type": "lab",
+                "slug": "mcs-github-harness",
+                "label": "Lab 2",
+                "url": "/mcs-labs/labs/mcs-github-harness/",
+                "title": "GitHub Copilot Harness - Component Model",
+                "difficulty": 300,
+                "duration": 45, "time": "11:15"},
+            {
+              "type": "break",
+              "title": "Lunch break", "time": "12:00", "duration": 60},
+              {
+                "type": "module",
+                "slug": "workflows",
+                "label": "Module 4",
+                "url": "/mcs-labs/modules/workflows/",
+                "title": "Workflows",
+                "difficulty": 300,
+                "duration": 15, "time": "13:00", "slides": "https://github.com/microsoft/mcs-labs/raw/main/presentations/ghcp-in-a-day/Module%204%20-%20Workflows.pptx"},
+              {
+                "type": "lab",
+                "slug": "mcs-workflows",
+                "label": "Lab 3",
+                "url": "/mcs-labs/labs/mcs-workflows/",
+                "title": "Workflows",
+                "difficulty": 300,
+                "duration": 45, "time": "13:15"},
+              {
+                "type": "module",
+                "slug": "instructions-skills-runtime-and-sandbox",
+                "label": "Module 5",
+                "url": "/mcs-labs/modules/instructions-skills-runtime-and-sandbox/",
+                "title": "Deep Dive: Instructions, Skills, Runtime and Sandbox",
+                "difficulty": 300,
+                "duration": 15, "time": "14:00", "slides": "https://github.com/microsoft/mcs-labs/raw/main/presentations/ghcp-in-a-day/Module%205%20-%20Deep%20Dive%20-%20Instructions%2C%20Skills%2C%20Runtime%20%26%20Sandbox.pptx"},
+              {
+                "type": "lab",
+                "slug": "mcs-skills-authoring",
+                "label": "Lab 4",
+                "url": "/mcs-labs/labs/mcs-skills-authoring/",
+                "title": "Skills and Skill Authoring",
+                "difficulty": 300,
+                "duration": 30, "time": "14:15"},
+              {
+                "type": "module",
+                "slug": "metadata-and-hooks-deep-dive",
+                "label": "Module 6",
+                "url": "/mcs-labs/modules/metadata-and-hooks-deep-dive/",
+                "title": "Deep Dive: Knowledge and Tools",
+                "difficulty": 200,
+                "duration": 15, "time": "14:45", "slides": "https://github.com/microsoft/mcs-labs/raw/main/presentations/ghcp-in-a-day/Module%206%20-%20Deep%20Dive%20-%20Knowledge%20%26%20Tools.pptx"},
+              {
+                "type": "lab",
+                "slug": "mcs-hooks",
+                "label": "Lab 5",
+                "url": "/mcs-labs/labs/mcs-hooks/",
+                "title": "Hooks and Knowledge: Travel Policy Agent",
+                "difficulty": 200,
+                "duration": 30, "time": "15:00"},
+            {
+              "type": "session",
+              "title": "Q&A", "time": "15:30", "duration": 30}]
+  },
+  {
+    "event_id": "mcs-in-a-day",
+    "title": "MCS in a Day",
+    "url": "/mcs-labs/workshops/mcs-in-a-day/",
+    "kind": "workshop",
+    "schedule": [
+            {
+              "type": "break",
+              "title": "Welcome + Breakout", "time": "09:00", "duration": 15},
+            {
+              "type": "session",
+              "title": "Introduction to Hands-On Labs", "description": "Overview of the lab environment, setup instructions, and expectations.", "time": "09:15", "duration": 15},
+              {
+                "type": "module",
+                "slug": "agent-builder",
+                "label": "Module 1",
+                "url": "/mcs-labs/modules/agent-builder/",
+                "title": "Agent Builder",
+                "difficulty": 100,
+                "duration": 30, "time": "09:30", "slides": "https://github.com/microsoft/mcs-labs/raw/main/presentations/mcs-in-a-day/01.%20Agent%20Builder_CB.pptx"},
+            {
+              "type": "break",
+              "title": "Coffee break / Q&A", "time": "10:00", "duration": 15},
+              {
+                "type": "lab",
+                "slug": "agent-builder-m365",
+                "label": "Lab 1",
+                "url": "/mcs-labs/labs/agent-builder-m365/",
+                "title": "Agent Builder",
+                "difficulty": 100,
+                "duration": 30, "time": "10:00"},
+              {
+                "type": "module",
+                "slug": "core-concepts-part1",
+                "label": "Module 2",
+                "url": "/mcs-labs/modules/core-concepts-part1/",
+                "title": "Copilot Studio Core Concepts - Part 1",
+                "difficulty": 100,
+                "duration": 30, "time": "10:30", "slides": "https://github.com/microsoft/mcs-labs/raw/main/presentations/mcs-in-a-day/02-04.%20Copilot%20Studio%20Core%20Concepts_CB.pptx"},
+              {
+                "type": "lab",
+                "slug": "core-concepts-agent-knowledge-tools",
+                "label": "Lab 2",
+                "url": "/mcs-labs/labs/core-concepts-agent-knowledge-tools/",
+                "title": "Creation, Topics, Knowledge, and Tools",
+                "difficulty": 200,
+                "duration": 45, "time": "11:00"},
+            {
+              "type": "break",
+              "title": "Lunch break", "time": "11:45", "duration": 60},
+            {
+              "type": "break",
+              "title": "Q+A", "time": "12:45", "duration": 15},
+              {
+                "type": "module",
+                "slug": "core-concepts-part2",
+                "label": "Module 3",
+                "url": "/mcs-labs/modules/core-concepts-part2/",
+                "title": "Copilot Studio Core Concepts - Part 2",
+                "difficulty": 200,
+                "duration": 30, "time": "13:00", "slides": "https://github.com/microsoft/mcs-labs/raw/main/presentations/mcs-in-a-day/02-04.%20Copilot%20Studio%20Core%20Concepts_CB.pptx"},
+              {
+                "type": "lab",
+                "slug": "core-concepts-variables-agents-channels",
+                "label": "Lab 3",
+                "url": "/mcs-labs/labs/core-concepts-variables-agents-channels/",
+                "title": "Variables, Agents, and Channels",
+                "difficulty": 200,
+                "duration": 30, "time": "13:30"},
+              {
+                "type": "module",
+                "slug": "core-concepts-part3",
+                "label": "Module 4",
+                "url": "/mcs-labs/modules/core-concepts-part3/",
+                "title": "Copilot Studio Core Concepts - Part 3",
+                "difficulty": 200,
+                "duration": 30, "time": "14:15", "slides": "https://github.com/microsoft/mcs-labs/raw/main/presentations/mcs-in-a-day/02-04.%20Copilot%20Studio%20Core%20Concepts_CB.pptx"},
+            {
+              "type": "break",
+              "title": "Coffee break / Q&A", "time": "14:45", "duration": 15},
+              {
+                "type": "lab",
+                "slug": "core-concepts-analytics-evaluations",
+                "label": "Lab 4",
+                "url": "/mcs-labs/labs/core-concepts-analytics-evaluations/",
+                "title": "Analytics and Evaluations",
+                "difficulty": 200,
+                "duration": 30, "time": "15:00"},
+              {
+                "type": "module",
+                "slug": "licensing",
+                "label": "Module 5",
+                "url": "/mcs-labs/modules/licensing/",
+                "title": "Licensing",
+                "difficulty": 100,
+                "duration": 30, "time": "15:30", "slides": "https://github.com/microsoft/mcs-labs/raw/main/presentations/mcs-in-a-day/15.%20Licensing_CB.pptx"},
+            {
+              "type": "break",
+              "title": "Open Q+A", "time": "16:00", "duration": 30}]
+  }]
+</script>
+<script type="application/json" id="mcs-lab-context">
+{
+  "type": "lab",
+  "slug": "core-concepts-agent-knowledge-tools",
+  "title": "Build Intelligent Agents with Knowledge Sources, Tools, and Topics",
+  "url": "/mcs-labs/labs/core-concepts-agent-knowledge-tools/"
+}
+</script>
+
+
+
+
+
+
+<div class="lab-header"><div class="lab-module-link" style="font-size: 0.78em; margin-bottom: 0.5em;">
+        <a href="https://microsoft.github.io/mcs-labs/modules/core-concepts-part1/" style="color: var(--color-accent); text-decoration: none; font-weight: 600;">
+          ← Part of: Copilot Studio Core Concepts - Part 1
+        </a>
+      </div><h1>Build Intelligent Agents with Knowledge Sources, Tools, and Topics</h1>
+  
+  <p class="lab-header-desc">Learn how to create an AI agent from scratch in Microsoft Copilot Studio, enhance it with knowledge sources, extend its capabilities with tools, and build custom topics for structured conversations.</p>
+  
+  
+  <p class="lab-header-updated">
+    Content last updated:
+    <time datetime="2026-05-12T17:15:09+00:00">5/13/2026</time>
+  </p>
+  
+  <div class="lab-header-meta">
+    <span class="lab-meta-pill lab-meta-pill-level-200">Level 200</span>
+    <span class="lab-meta-pill lab-meta-pill-duration">45 min</span>
+    <span class="lab-meta-pill lab-meta-pill-section">Core Learning Path</span>
+    
+    <a href="https://github.com/microsoft/mcs-labs/issues/new?template=bug_report.yml&amp;type=Bug&amp;labels=lab&amp;title=%5Bcore-concepts-agent-knowledge-tools%5D+&amp;lab=core-concepts-agent-knowledge-tools" target="_blank" rel="noopener noreferrer" class="lab-meta-pill lab-meta-pill-feedback">Report an issue</a>
+  </div>
+</div>
+
+<!-- Event navigation rail. Hidden by default; _includes/event-nav/script.html
+     unhides + populates when an active event context is resolved. All ARIA
+     attributes ship pre-set so assistive tech has a stable label even before
+     the script runs. -->
+<nav class="event-rail" id="event-rail" aria-label="Event navigation">
+  <div class="event-rail-head">
+    <a class="event-rail-event" id="event-rail-event" href="https://microsoft.github.io/mcs-labs/workshops/agent-in-a-day/">
+      <span class="event-rail-event-label">Workshop</span>
+      <span class="event-rail-event-name" id="event-rail-event-name">Agent in a Day</span>
+    </a>
+    <span class="event-rail-position" id="event-rail-position" aria-live="polite">Lab 2 of 4</span>
+    <div class="event-rail-actions">
+      <button type="button" class="event-rail-btn event-rail-prev" id="event-rail-prev" aria-label="Previous lab: M365 Agent Builder">
+        <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        <span class="event-rail-btn-label">Prev</span>
+      </button>
+      <button type="button" class="event-rail-btn event-rail-next" id="event-rail-next" aria-label="Next lab: Variables, Agents, and Channels">
+        <span class="event-rail-btn-label">Next</span>
+        <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+      <button type="button" class="event-rail-btn event-rail-expand" id="event-rail-expand" aria-label="Show full agenda" aria-expanded="false" aria-controls="event-rail-agenda">
+        <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </button>
+      <button type="button" class="event-rail-btn event-rail-exit" id="event-rail-exit" aria-label="Exit event context" title="Exit event context">
+        <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+  </div>
+  <div class="event-rail-agenda" id="event-rail-agenda" hidden="">
+    <ol class="event-rail-agenda-list" id="event-rail-agenda-list" role="list"><li class="event-agenda-row event-agenda-row--session"><span class="event-agenda-time">09:00</span><span class="event-agenda-body">Welcome + Kickoff<span class="event-agenda-desc">Meet your instructor, review the day, and set expectations.</span></span><span class="event-agenda-duration">15 min</span></li><li class="event-agenda-row event-agenda-row--session"><span class="event-agenda-time">09:15</span><span class="event-agenda-body">Introduction to Hands-On Labs<span class="event-agenda-desc">Overview of the lab environment, setup instructions, and how the day flows.</span></span><span class="event-agenda-duration">15 min</span></li><li class="event-agenda-row event-agenda-row--module"><span class="event-agenda-time">09:30</span><span class="event-agenda-body"><a href="https://microsoft.github.io/mcs-labs/modules/agent-builder/?event=agent-in-a-day">Module 1: M365 Agent Builder</a></span><span class="event-agenda-duration">30 min</span></li><li class="event-agenda-row event-agenda-row--break"><span class="event-agenda-time">10:00</span><span class="event-agenda-body">Coffee break / Q&amp;A</span><span class="event-agenda-duration">15 min</span></li><li class="event-agenda-row event-agenda-row--lab"><span class="event-agenda-time">10:15</span><span class="event-agenda-body"><a href="https://microsoft.github.io/mcs-labs/labs/agent-builder-m365/?event=agent-in-a-day">Lab 1: M365 Agent Builder</a></span><span class="event-agenda-duration">30 min</span></li><li class="event-agenda-row event-agenda-row--module"><span class="event-agenda-time">10:45</span><span class="event-agenda-body"><a href="https://microsoft.github.io/mcs-labs/modules/core-concepts-part1/?event=agent-in-a-day">Module 2: Copilot Studio Core Concepts - Part 1</a></span><span class="event-agenda-duration">30 min</span></li><li class="event-agenda-row event-agenda-row--lab event-agenda-row--current"><span class="event-agenda-time">11:15</span><span class="event-agenda-body"><a href="https://microsoft.github.io/mcs-labs/labs/core-concepts-agent-knowledge-tools/?event=agent-in-a-day" aria-current="page">Lab 2: Creation, Topics, Knowledge, and Tools</a></span><span class="event-agenda-duration">45 min</span></li><li class="event-agenda-row event-agenda-row--break"><span class="event-agenda-time">12:00</span><span class="event-agenda-body">Lunch break</span><span class="event-agenda-duration">60 min</span></li><li class="event-agenda-row event-agenda-row--module"><span class="event-agenda-time">13:00</span><span class="event-agenda-body"><a href="https://microsoft.github.io/mcs-labs/modules/core-concepts-part2/?event=agent-in-a-day">Module 3: Copilot Studio Core Concepts - Part 2</a></span><span class="event-agenda-duration">30 min</span></li><li class="event-agenda-row event-agenda-row--lab"><span class="event-agenda-time">13:30</span><span class="event-agenda-body"><a href="https://microsoft.github.io/mcs-labs/labs/core-concepts-variables-agents-channels/?event=agent-in-a-day">Lab 3: Variables, Agents, and Channels</a></span><span class="event-agenda-duration">30 min</span></li><li class="event-agenda-row event-agenda-row--break"><span class="event-agenda-time">14:00</span><span class="event-agenda-body">Coffee break / Q&amp;A</span><span class="event-agenda-duration">15 min</span></li><li class="event-agenda-row event-agenda-row--module"><span class="event-agenda-time">14:15</span><span class="event-agenda-body"><a href="https://microsoft.github.io/mcs-labs/modules/orchestration/?event=agent-in-a-day">Module 4: Orchestration and Dynamic Chaining</a></span><span class="event-agenda-duration">45 min</span></li><li class="event-agenda-row event-agenda-row--lab"><span class="event-agenda-time">15:00</span><span class="event-agenda-body"><a href="https://microsoft.github.io/mcs-labs/labs/mcs-orchestration/?event=agent-in-a-day">Lab 4: Orchestration with Copilot Studio</a></span><span class="event-agenda-duration">60 min</span></li></ol>
+  </div>
+</nav>
+
+
+<hr>
+
+<h1 id="build-intelligent-agents-with-knowledge-sources-tools-and-topics">Build Intelligent Agents with Knowledge Sources, Tools, and Topics<a class="header-link" href="#build-intelligent-agents-with-knowledge-sources-tools-and-topics" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h1>
+
+<p>Learn how to create an AI agent from scratch in Microsoft Copilot Studio, enhance it with knowledge sources, extend its capabilities with tools, and build custom topics for structured conversations.</p>
+
+<hr>
+
+<h2 id="lab-details">Lab Details<a class="header-link" href="#lab-details" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Level</th>
+      <th>Persona</th>
+      <th>Duration</th>
+      <th>Purpose</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>200</td>
+      <td>Maker</td>
+      <td>45 minutes</td>
+      <td>After completing this lab, participants will be able to create and configure a new Copilot Studio agent with custom instructions and AI model selection, enhance agent intelligence by adding document and website knowledge sources, extend agent capabilities by creating connector-based and custom tools, and build custom topics with triggers and nodes to handle structured conversation flows.</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr>
+
+<h2 id="table-of-contents">Table of Contents<a class="header-link" href="#table-of-contents" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h2>
+
+<ul>
+  <li><a href="#why-this-matters">Why This Matters</a></li>
+  <li><a href="#introduction">Introduction</a></li>
+  <li><a href="#core-concepts-overview">Core Concepts Overview</a></li>
+  <li><a href="#documentation-and-additional-training-links">Documentation and Additional Training Links</a></li>
+  <li><a href="#prerequisites">Prerequisites</a></li>
+  <li><a href="#summary-of-targets">Summary of Targets</a></li>
+  <li><a href="#use-cases-covered">Use Cases Covered</a></li>
+  <li><a href="#instructions-by-use-case">Instructions by Use Case</a>
+    <ul>
+      <li><a href="#use-case-1-create-and-configure-your-first-agent">Use Case #1: Create and Configure Your First Agent</a></li>
+      <li><a href="#use-case-2-enhance-agent-intelligence-with-knowledge-sources">Use Case #2: Enhance Agent Intelligence with Knowledge Sources</a></li>
+      <li><a href="#use-case-3-extend-your-agent-with-tools">Use Case #3: Extend Your Agent with Tools</a></li>
+      <li><a href="#use-case-4-build-custom-topics-for-structured-conversations">Use Case #4: Build Custom Topics for Structured Conversations</a></li>
+    </ul>
+  </li>
+</ul>
+
+<hr>
+
+<h2 id="why-this-matters">Why This Matters<a class="header-link" href="#why-this-matters" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h2>
+
+<p><strong>Building AI agents can feel overwhelming</strong> - especially when you’re starting from scratch and need them to actually DO things.</p>
+
+<p>Think of building an AI agent like assembling a team:</p>
+<ul>
+  <li><strong>Without proper setup</strong>: Your team has no job descriptions, no reference materials, no tools, and no processes - they give generic answers, can’t take action, and frustrate everyone</li>
+  <li><strong>With proper setup</strong>: Your team has clear roles, access to the right documents, powerful tools at their fingertips, and well-defined workflows - they deliver intelligent, actionable results every time</li>
+</ul>
+
+<p><strong>Common challenges solved by this lab:</strong></p>
+<ul>
+  <li>“I don’t know where to start with AI agent development”</li>
+  <li>“My agent gives generic answers that don’t help users”</li>
+  <li>“My agent needs real-time data from external systems”</li>
+  <li>“I need my agent to handle specific conversation flows and collect user information”</li>
+</ul>
+
+<p><strong>In just 45 minutes, you’ll have a fully functional AI agent with knowledge, tools, and structured conversation flows</strong> - no coding required.</p>
+
+<hr>
+
+<h2 id="introduction">Introduction<a class="header-link" href="#introduction" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h2>
+
+<p>Microsoft Copilot Studio empowers makers to build sophisticated AI agents without writing code. By combining intuitive visual tools with powerful AI capabilities, you can create agents that understand natural language, leverage your organization’s knowledge, connect to external services, and guide users through structured conversation flows.</p>
+
+<p><strong>Real-world example:</strong> A sales team needs an AI assistant that can answer product questions from official documentation, fetch real-time weather data for event planning, analyze the quality of email drafts, and collect contact information for a mailing list. With Copilot Studio, you build one agent that does all of this: it references product docs for accurate answers, uses connector tools for live data, runs custom prompt analysis, and guides users through a structured signup flow - all without writing a single line of code.</p>
+
+<p>This lab takes you through the complete journey from agent creation to a fully capable assistant with knowledge sources, tools, and custom topics - giving you the foundation to build production-ready AI solutions.</p>
+
+<hr>
+
+<h2 id="core-concepts-overview">Core Concepts Overview<a class="header-link" href="#core-concepts-overview" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Concept</th>
+      <th>Why it matters</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Agent Instructions</strong></td>
+      <td>Define your agent’s personality, expertise, and behavior - these instructions guide every interaction and ensure consistent, on-brand responses that align with your business goals</td>
+    </tr>
+    <tr>
+      <td><strong>AI Model Selection</strong></td>
+      <td>Different AI models offer varying levels of capability and cost - understanding which model to use (like Claude Sonnet 4.6) ensures optimal performance for your specific use case</td>
+    </tr>
+    <tr>
+      <td><strong>Knowledge Sources</strong></td>
+      <td>Ground your agent in factual, domain-specific content by connecting documents, websites, and files - this transforms generic AI into a specialized expert that provides accurate, verifiable answers</td>
+    </tr>
+    <tr>
+      <td><strong>Tools</strong></td>
+      <td>Extend agent capabilities beyond knowledge sources by connecting to external APIs, connectors, and services - enabling real-time data access and action execution that makes agents truly interactive</td>
+    </tr>
+    <tr>
+      <td><strong>Custom Tools</strong></td>
+      <td>Purpose-built tools with custom prompts and inputs that transform user requests into specific actions - like prompt analysis, data transformation, or specialized calculations</td>
+    </tr>
+    <tr>
+      <td><strong>Topics</strong></td>
+      <td>Structured conversation flows with triggers, conditions, and nodes that define how agents respond to specific user intents - providing precise control over agent behavior</td>
+    </tr>
+    <tr>
+      <td><strong>Trigger Phrases</strong></td>
+      <td>Keywords and patterns that activate specific topics - these ensure your agent recognizes when to engage specialized conversation flows</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr>
+
+<h2 id="documentation-and-additional-training-links">Documentation and Additional Training Links<a class="header-link" href="#documentation-and-additional-training-links" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h2>
+
+<ul>
+  <li><a href="https://learn.microsoft.com/microsoft-copilot-studio/fundamentals-what-is-copilot-studio" target="_blank" rel="noopener noreferrer">Microsoft Copilot Studio Overview</a></li>
+  <li><a href="https://learn.microsoft.com/microsoft-copilot-studio/fundamentals-get-started" target="_blank" rel="noopener noreferrer">Create and configure agents</a></li>
+  <li><a href="https://learn.microsoft.com/en-us/microsoft-365-copilot/extensibility/knowledge-sources" target="_blank" rel="noopener noreferrer">Add knowledge sources to your agent</a></li>
+  <li><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-create-edit-topics" target="_blank" rel="noopener noreferrer">Create and manage topics</a></li>
+  <li><a href="https://learn.microsoft.com/microsoft-copilot-studio/authoring-triggers" target="_blank" rel="noopener noreferrer">Work with topic triggers</a></li>
+</ul>
+
+<hr>
+
+<h2 id="prerequisites">Prerequisites<a class="header-link" href="#prerequisites" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h2>
+
+<blockquote class="notice notice--info">
+  <p><strong>Note:</strong>
+If you are completing this lab as part of a CAT-led workshop or bootcamp, you do not need to complete these prerequisites: the CAT team has already prepared them in advance. These prerequisites apply only when completing the lab in a tenant that is not managed by CAT.</p>
+</blockquote>
+
+<ul>
+  <li>Access to Microsoft Copilot Studio (trial or licensed environment)</li>
+  <li>A document to upload as a knowledge source (PDF, Word, or text file) - or use the <a href="https://cdn-dynmedia-1.microsoft.com/is/content/microsoftcorp/microsoft/bade/documents/products-and-services/en-us/bizapps/Microsoft-Copilot-Studio-Licensing-Guide-June-2026-PUB.pdf" target="_blank" rel="noopener noreferrer">Copilot Studio Licensing Guide (June 2026)</a></li>
+  <li>Basic familiarity with web browsers and form filling</li>
+</ul>
+
+<hr>
+
+<h2 id="summary-of-targets">Summary of Targets<a class="header-link" href="#summary-of-targets" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h2>
+
+<p>In this lab, you’ll build a Copilot Studio agent from the ground up, enhance it with knowledge, extend it with tools, and add structured conversation flows. By the end of the lab, you will:</p>
+
+<ul>
+  <li>Create a new Copilot Studio agent with custom instructions and configuration</li>
+  <li>Configure agent settings including AI model selection (Claude Sonnet 4.6)</li>
+  <li>Upload and integrate knowledge sources (documents and websites) to ground agent responses</li>
+  <li>Create a connector-based tool that retrieves real-time weather data</li>
+  <li>Build a custom prompt analyzer tool with inputs and custom instructions</li>
+  <li>Create custom topics with triggers to handle specific conversation patterns</li>
+  <li>Test your agent across all capabilities to verify end-to-end functionality</li>
+</ul>
+
+<hr>
+
+<h2 id="use-cases-covered">Use Cases Covered<a class="header-link" href="#use-cases-covered" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Step</th>
+      <th>Use Case</th>
+      <th>Value added</th>
+      <th>Effort</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td><a href="#use-case-1-create-and-configure-your-first-agent">Create and Configure Your First Agent</a></td>
+      <td>Build a functional AI agent with clear instructions and optimal AI model settings</td>
+      <td>8 min</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td><a href="#use-case-2-enhance-agent-intelligence-with-knowledge-sources">Enhance Agent Intelligence with Knowledge Sources</a></td>
+      <td>Transform generic AI into a domain expert by grounding responses in your organization’s content</td>
+      <td>10 min</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td><a href="#use-case-3-extend-your-agent-with-tools">Extend Your Agent with Tools</a></td>
+      <td>Connect your agent to external services and build custom analytical capabilities</td>
+      <td>15 min</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td><a href="#use-case-4-build-custom-topics-for-structured-conversations">Build Custom Topics for Structured Conversations</a></td>
+      <td>Create structured conversation flows that handle specific user intents and workflows</td>
+      <td>12 min</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr>
+
+<h2 id="instructions-by-use-case">Instructions by Use Case<a class="header-link" href="#instructions-by-use-case" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h2>
+
+<hr>
+
+<h2 id="use-case-1-create-and-configure-your-first-agent">Use Case #1: Create and Configure Your First Agent<a class="header-link" href="#use-case-1-create-and-configure-your-first-agent" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h2>
+
+<p>Build your first Copilot Studio agent with custom instructions and AI model configuration.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Use case</th>
+      <th>Value added</th>
+      <th>Estimated effort</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Create and Configure Your First Agent</td>
+      <td>Build a functional AI agent with clear instructions and optimal AI model settings</td>
+      <td>8 minutes</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Summary of tasks</strong></p>
+
+<p>In this section, you’ll learn how to create a new agent, configure its instructions and behavior, and select the appropriate AI model.</p>
+
+<p><strong>Scenario:</strong> This morning your agent could only read what anyone can read. Now it gets the plant’s own documents — three years of maintenance history, the equipment manuals, and the handover notes of a technician who left last year. You are building the half that only Vestbjerg has.</p>
+
+<h3 id="objective">Objective<a class="header-link" href="#objective" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h3>
+
+<p>Create a fully configured Copilot Studio agent with clear instructions, including the rule that matters most: never invent a safety instruction.</p>
+
+<hr>
+
+<h3 id="step-by-step-instructions">Step-by-step instructions<a class="header-link" href="#step-by-step-instructions" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h3>
+
+<h4 id="create-your-agent">Create Your Agent<a class="header-link" href="#create-your-agent" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h4>
+
+<ol>
+  <li>
+    <p>Go to <a href="https://copilotstudio.microsoft.com/" target="_blank" rel="noopener noreferrer">Microsoft Copilot Studio</a> and sign in with your credentials.</p>
+
+    <blockquote class="notice notice--warning">
+      <p><strong>Important:</strong>
+On a first sign-in (especially for workshop / fresh-tenant accounts) you may see a one-time <strong>Welcome to Microsoft Copilot Studio</strong> consent dialog. Select <strong>Get Started</strong> to dismiss it. (If it later appears stacked <em>behind</em> the <strong>Name your agent</strong> dialog, select <strong>Cancel</strong> on that dialog, choose <strong>Get Started</strong>, then create the agent again.)</p>
+    </blockquote>
+  </li>
+  <li>
+    <p>In the left navigation, select <strong>Agents</strong>.</p>
+  </li>
+  <li>
+    <p>Select the <strong>down-arrow (chevron)</strong> next to the <strong>New Agent</strong> button, then choose <strong>New classic agent</strong>.</p>
+
+    <p><img src="assets/new-agent-classic-menu.png" alt="New Agent split-button menu showing New classic agent"></p>
+
+    <blockquote class="notice notice--info">
+      <p><strong>Note:</strong>
+Leave the <strong>New experience</strong> toggle <strong>on</strong>. <strong>New classic agent</strong> opens the classic authoring canvas while keeping you in the new experience — there’s no need to switch experiences. (The classic create flow opens in a new browser tab.)</p>
+    </blockquote>
+  </li>
+  <li>
+    <p>In the <strong>Name your agent</strong> dialog, enter the following name and select <strong>Create</strong>:</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><button title="Copy to clipboard" class="clipboard-copy-button"><span class="sr-only">Copy code</span><i class="far fa-fw fa-copy"></i><i class="fas fa-fw fa-check copied"></i></button><code>Vestbjerg Maintenance Assistant
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Wait for the <strong>“Your agent has been provisioned.”</strong> notification. Your agent opens on its <strong>Overview</strong> page with the <strong>Overview / Knowledge / Tools / Agents / Topics / Channels</strong> tabs.</p>
+
+    <p><img src="assets/classic-agent-created-overview.png" alt="Provisioned Vestbjerg Maintenance Assistant agent on its Overview page"></p>
+  </li>
+  <li>
+    <p>Confirm the agent’s model is set to <strong>Claude Sonnet 4.6</strong>. This is the default for new classic agents; if it isn’t selected, choose it from the <strong>Select your agent’s model</strong> dropdown.</p>
+  </li>
+  <li>
+    <p>In the <strong>Instructions</strong> section, select <strong>Edit</strong>, paste the following, and save:</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><button title="Copy to clipboard" class="clipboard-copy-button"><span class="sr-only">Copy code</span><i class="far fa-fw fa-copy"></i><i class="fas fa-fw fa-check copied"></i></button><code>You are the Vestbjerg Maintenance Assistant. Your purpose is to help technicians working on equipment at the Vestbjerg processing plant find the right procedure, specification or past job.
+
+Guidelines:
+- Answer questions about plant equipment, maintenance procedures and past work.
+- Always name the document your answer came from.
+- Never invent a safety or isolation instruction. If the procedure is not in your documents, say so and tell the technician to check the permit.
+- Keep responses brief and practical. You are talking to someone standing next to a machine.
+- If you are unsure, say so rather than guessing.
+</code></pre></div>    </div>
+
+    <blockquote class="notice notice--info">
+      <p><strong>Note:</strong>
+Earlier versions of this lab used a describe-driven flow that auto-generated these Instructions. A new classic agent starts blank, so you provide the Instructions here. Feel free to refine the wording.</p>
+    </blockquote>
+
+    <blockquote class="notice notice--success">
+      <p><strong>Tip:</strong>
+Think of instructions as the agent’s job description: clear, specific instructions help your agent understand its role and respond consistently.</p>
+    </blockquote>
+  </li>
+  <li>
+    <p>Scroll down to the <strong>Knowledge</strong> section and select <strong>Add Knowledge</strong>.</p>
+  </li>
+  <li>
+    <p>Select <strong>Public websites</strong> from the list of knowledge source options.</p>
+  </li>
+  <li>
+    <p>Input the following URL and select <strong>Add</strong>.</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><button title="Copy to clipboard" class="clipboard-copy-button"><span class="sr-only">Copy code</span><i class="far fa-fw fa-copy"></i><i class="fas fa-fw fa-check copied"></i></button><code>https://learn.microsoft.com
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>The website should appear in the list of links. Select <strong>Add to agent</strong> to save the change.</p>
+  </li>
+</ol>
+
+<h4 id="test-your-agent">Test Your Agent<a class="header-link" href="#test-your-agent" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h4>
+
+<ol>
+  <li>
+    <p>In the test panel on the right side of the screen, enter the following question and select <strong>Send</strong>:</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><button title="Copy to clipboard" class="clipboard-copy-button"><span class="sr-only">Copy code</span><i class="far fa-fw fa-copy"></i><i class="fas fa-fw fa-check copied"></i></button><code>What is the isolation procedure for P-207?
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Review the agent’s response. Notice how it references the Microsoft Learn knowledge source you provided.</p>
+  </li>
+  <li>
+    <p>Observe the response quality and how the agent leverages its instructions to provide helpful, contextual guidance.</p>
+  </li>
+</ol>
+
+<hr>
+
+<h3 id="congratulations-youve-completed-use-case-1">Congratulations! You’ve completed Use Case 1!<a class="header-link" href="#congratulations-youve-completed-use-case-1" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h3>
+
+<hr>
+
+<h3 id="test-your-understanding">Test your understanding<a class="header-link" href="#test-your-understanding" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h3>
+
+<p><strong>Key takeaways:</strong></p>
+
+<ul>
+  <li><strong>Agent Instructions Define Behavior</strong> – Clear, specific instructions act as your agent’s job description and guide every interaction</li>
+  <li><strong>AI Model Selection Impacts Quality</strong> – Claude Sonnet 4.6 offers superior reasoning and accuracy for production scenarios</li>
+  <li><strong>Knowledge Sources Ground Responses</strong> – Connecting external content (like Microsoft Learn) helps agents provide factual, verifiable answers</li>
+</ul>
+
+<p><strong>Lessons learned &amp; troubleshooting tips:</strong></p>
+
+<ul>
+  <li>If your agent gives generic responses, review and refine your instructions to be more specific about its role and expertise</li>
+  <li>Knowledge source indexing can take 2-5 minutes - wait before testing knowledge-specific questions</li>
+  <li>Selecting a more capable model (such as Claude Sonnet 4.6) generally improves reasoning quality, but you should still test with your own scenarios to confirm it’s the right fit</li>
+</ul>
+
+<p><strong>Challenge: Apply this to your own use case</strong></p>
+
+<ul>
+  <li>What instructions would you write for an agent in your department?</li>
+  <li>What AI model would you choose for a high-stakes customer-facing scenario?</li>
+  <li>What knowledge sources exist in your organization that could enhance an agent?</li>
+</ul>
+
+<hr>
+
+<hr>
+
+<h2 id="use-case-2-enhance-agent-intelligence-with-knowledge-sources">Use Case #2: Enhance Agent Intelligence with Knowledge Sources<a class="header-link" href="#use-case-2-enhance-agent-intelligence-with-knowledge-sources" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h2>
+
+<p>Upload custom documents and content to transform your agent from a generic assistant into a domain-specific expert.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Use case</th>
+      <th>Value added</th>
+      <th>Estimated effort</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Enhance Agent Intelligence with Knowledge Sources</td>
+      <td>Transform generic AI into a domain expert by grounding responses in your organization’s content</td>
+      <td>10 minutes</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Summary of tasks</strong></p>
+
+<p>In this section, you’ll learn how to upload documents as knowledge sources and test how your agent uses that knowledge to answer domain-specific questions.</p>
+
+<p><strong>Scenario:</strong> Your Vestbjerg Maintenance Assistant needs to answer questions about Copilot Studio licensing options, including pay-as-you-go pricing. You’ll upload the official licensing guide so the agent can provide accurate, up-to-date answers grounded in Microsoft documentation.</p>
+
+<h3 id="objective-1">Objective<a class="header-link" href="#objective-1" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h3>
+
+<p>Add a document knowledge source to your agent and verify that it accurately answers questions using the uploaded content.</p>
+
+<hr>
+
+<h3 id="step-by-step-instructions-1">Step-by-step instructions<a class="header-link" href="#step-by-step-instructions-1" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h3>
+
+<h4 id="add-document-knowledge-source">Add Document Knowledge Source<a class="header-link" href="#add-document-knowledge-source" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h4>
+
+<ol>
+  <li>
+    <p>In your Copilot Studio agent, select  <strong>Knowledge</strong> in the top navigation bar for the agent.</p>
+  </li>
+  <li>
+    <p>Download the <a href="https://cdn-dynmedia-1.microsoft.com/is/content/microsoftcorp/microsoft/bade/documents/products-and-services/en-us/bizapps/Microsoft-Copilot-Studio-Licensing-Guide-June-2026-PUB.pdf" target="_blank" rel="noopener noreferrer">Copilot Studio Licensing Guide (June 2026)</a>. Just make sure you have the file local on your computer.</p>
+  </li>
+  <li>
+    <p>Select <strong>+ Add knowledge</strong> and select the <strong>Upload file</strong> option (the large drop-zone tile at the top of the Featured list). Click <strong>select to browse</strong> and use the file dialog to locate and select your downloaded license guide file from your local computer.</p>
+
+    <blockquote class="notice notice--success">
+      <p><strong>Tip:</strong>
+You can upload multiple file types including PDF, Word documents (.docx), PowerPoint (.pptx), and text files. Each file can be up to 512 MB.</p>
+    </blockquote>
+  </li>
+  <li>
+    <p>Select <strong>Add to agent</strong>.</p>
+  </li>
+  <li>
+    <p>The processing of the file will take a few minutes. While it processes select <strong>Add knowledge</strong> again and take a minute to review the other types of knowledge sources you can use.</p>
+  </li>
+  <li>
+    <p>Select <strong>Advanced</strong> and review that list of sources as well. When you are done reviewing select <strong>Cancel</strong> to return to the list of your agents configured knowledge sources.</p>
+  </li>
+  <li>
+    <p>Wait for the file to finish processing if not already done. You’ll see a status indicator showing the indexing progress. When it is done it will say <strong>Ready</strong> in the Status column.</p>
+
+    <blockquote class="notice notice--info">
+      <p><strong>Note:</strong>
+Knowledge indexing typically takes 2-5 minutes depending on the document size. Larger documents or multiple files may take longer. If the status doesn’t seem to update, try refreshing your browser — this can help it reflect the latest progress. You can continue with the next steps while the file is indexing, but make sure it finishes before testing any licensing questions.</p>
+    </blockquote>
+  </li>
+</ol>
+
+<h4 id="configure-knowledge-source-settings">Configure Knowledge Source Settings<a class="header-link" href="#configure-knowledge-source-settings" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h4>
+
+<ol>
+  <li>
+    <p>Once the document is indexed, select on the knowledge source to view its details.</p>
+  </li>
+  <li>
+    <p>Review the <strong>Name</strong> and <strong>Description</strong> fields. Update if needed to make the source easily identifiable.</p>
+  </li>
+</ol>
+
+<h4 id="check-and-disable-web-search">Check and disable Web Search<a class="header-link" href="#check-and-disable-web-search" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h4>
+
+<p>The Use information from the web setting is available on the Generative AI settings page or the Web Search setting in the Knowledge section of the agent’s Overview page. This setting lets your agent access broad, real-time, and up-to-date information beyond what is available in predefined or enterprise-specific knowledge bases. For our scenario, we want to keep the use of knowledge focused on our provided resources and not the broader web.</p>
+
+<ol>
+  <li>
+    <p>Go to the Overview tab, scroll down to the Knowledge section</p>
+  </li>
+  <li>
+    <p>Select <strong>Disabled</strong> on the Web Search option.</p>
+  </li>
+</ol>
+
+<h4 id="disable-ungrounded-responses">Disable Ungrounded Responses<a class="header-link" href="#disable-ungrounded-responses" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h4>
+
+<ol>
+  <li>
+    <p>Select the <strong>Settings</strong> button at the top right of the agent (next to <strong>Publish</strong>). The Settings panel opens with <strong>Generative AI</strong> selected by default; if it isn’t selected, choose <strong>Generative AI</strong> from the left navigation.</p>
+  </li>
+  <li>
+    <p>Scroll to the <strong>Knowledge</strong> section of the Generative AI settings page and turn off the <strong>Allow ungrounded responses</strong> toggle.</p>
+  </li>
+  <li>
+    <p>Select <strong>Save</strong> to apply the change.</p>
+
+    <blockquote class="notice notice--info">
+      <p><strong>Note:</strong>
+Disabling Web Search and Allow Ungrounded responses together ensures that your agent only uses the data you have explicitly provided to respond to users. This significantly reduces the chance of hallucinations — responses that sound plausible but aren’t based on your actual knowledge sources.</p>
+    </blockquote>
+  </li>
+</ol>
+
+<h4 id="set-knowledge-source-as-official">Set Knowledge Source as Official<a class="header-link" href="#set-knowledge-source-as-official" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h4>
+
+<ol>
+  <li>
+    <p>Go back to the <strong>Overview</strong> tab and scroll down to the <strong>Knowledge</strong> section.</p>
+  </li>
+  <li>
+    <p>Select the uploaded licensing guide file to open its details.</p>
+  </li>
+  <li>
+    <p>Set the source to <strong>Official</strong> and select <strong>Got it</strong> if prompted that this will update agent instructions.</p>
+
+    <blockquote class="notice notice--info">
+      <p><strong>Note:</strong>
+Marking a knowledge source as <strong>Official</strong> in Copilot Studio tells the agent to treat that content as authoritative and trustworthy. When multiple knowledge sources are available, the agent will prioritize official sources over non-official ones when generating responses. This is especially useful for policy documents, licensing guides, and other content where accuracy is critical.</p>
+    </blockquote>
+  </li>
+</ol>
+
+<h4 id="add-additional-knowledge-sources">Add Additional Knowledge Sources<a class="header-link" href="#add-additional-knowledge-sources" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h4>
+
+<ol>
+  <li>
+    <p>Return to the <strong>Knowledge</strong> panel on the <strong>Overview</strong> tab on the agent and click <strong>+ Add Knowledge</strong> again.</p>
+  </li>
+  <li>
+    <p>This time, select <strong>Public websites</strong> as the knowledge source type.</p>
+  </li>
+  <li>
+    <p>Input the following URL and select <strong>Add</strong>.</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><button title="Copy to clipboard" class="clipboard-copy-button"><span class="sr-only">Copy code</span><i class="far fa-fw fa-copy"></i><i class="fas fa-fw fa-check copied"></i></button><code>[SHAREPOINT-SITE-URL]
+</code></pre></div>    </div>
+
+    <blockquote class="notice notice--info">
+      <p><strong>Note:</strong>
+When adding public website knowledge sources in Copilot Studio, you can only filter URLs up to two directories deep (e.g., <code class="language-plaintext highlighter-rouge">domain.com/level1/level2</code>). This is a limitation of the indexing performed by Bing. Deeper URLs will still be used, but you won’t be able to scope the knowledge source more granularly beyond two levels.</p>
+    </blockquote>
+  </li>
+  <li>
+    <p>Select <strong>Add to agent</strong>.</p>
+  </li>
+  <li>
+    <p>Wait for the website content to be indexed.</p>
+  </li>
+  <li>
+    <p>Test the agent with the following question:</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><button title="Copy to clipboard" class="clipboard-copy-button"><span class="sr-only">Copy code</span><i class="far fa-fw fa-copy"></i><i class="fas fa-fw fa-check copied"></i></button><code>Has the mechanical seal on P-207 failed before?
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h4 id="test-licensing-knowledge">Test Licensing Knowledge<a class="header-link" href="#test-licensing-knowledge" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h4>
+
+<blockquote class="notice notice--warning">
+  <p><strong>Important:</strong>
+Before completing this section, make sure the licensing guide file you uploaded earlier has finished indexing. The Status column should show <strong>Ready</strong> before proceeding. If you are still waiting for the file to index, you can skip ahead to Use Case 3 and come back to test this later.</p>
+</blockquote>
+
+<ol>
+  <li>
+    <p>In the test panel on the right, click start a new conversation to ensure the agent uses the latest knowledge.</p>
+  </li>
+  <li>
+    <p>Enter the following question to test the uploaded licensing guide and select <strong>Send</strong>:</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><button title="Copy to clipboard" class="clipboard-copy-button"><span class="sr-only">Copy code</span><i class="far fa-fw fa-copy"></i><i class="fas fa-fw fa-check copied"></i></button><code>What should I check before fitting a replacement seal?
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Review the agent’s response. It should reference specific licensing information from the licensing guide you uploaded earlier.</p>
+  </li>
+  <li>
+    <p>Look for citations or references in the response that indicate which knowledge source was used.</p>
+
+    <blockquote class="notice notice--success">
+      <p><strong>Tip:</strong>
+Agents typically show citations at the bottom of responses, indicating which knowledge sources contributed to the answer. This helps users verify information accuracy.</p>
+    </blockquote>
+  </li>
+</ol>
+
+<hr>
+
+<h3 id="congratulations-youve-completed-use-case-2">Congratulations! You’ve completed Use Case 2!<a class="header-link" href="#congratulations-youve-completed-use-case-2" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h3>
+
+<hr>
+
+<h3 id="test-your-understanding-1">Test your understanding<a class="header-link" href="#test-your-understanding-1" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h3>
+
+<ul>
+  <li>How does adding a document knowledge source change the agent’s responses?</li>
+  <li>Why is it important to wait for knowledge indexing to complete before testing?</li>
+  <li>What types of content make good knowledge sources for agents?</li>
+</ul>
+
+<p><strong>Challenge: Apply this to your own use case</strong></p>
+
+<ul>
+  <li>What documents exist in your organization that would make valuable knowledge sources?</li>
+  <li>How could you organize multiple knowledge sources for optimal agent performance?</li>
+  <li>What questions would your users ask that could be answered from your documents?</li>
+</ul>
+
+<hr>
+
+<hr>
+
+<h2 id="use-case-3-extend-your-agent-with-tools">Use Case #3: Extend Your Agent with Tools<a class="header-link" href="#use-case-3-extend-your-agent-with-tools" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h2>
+
+<p>Build two different types of tools: a connector-based weather tool and a custom prompt analyzer tool with intelligent inputs.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Use case</th>
+      <th>Value added</th>
+      <th>Estimated effort</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Extend Your Agent with Tools</td>
+      <td>Connect your agent to external services and build custom analytical capabilities</td>
+      <td>15 minutes</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Summary of tasks</strong></p>
+
+<p>In this section, you’ll learn how to create agent tools using pre-built connectors, build custom tools with prompts and inputs, configure authentication, and add agent-level instructions for tool usage.</p>
+
+<p><strong>Scenario:</strong> Your Vestbjerg Maintenance Assistant needs to help users in two ways: (1) fetch real-time weather data when users ask about weather conditions, and (2) analyze user prompts and provide feedback based on prompt engineering best practices (CARE framework).</p>
+
+<h3 id="objective-2">Objective<a class="header-link" href="#objective-2" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h3>
+
+<p>Create and configure two tools that extend your agent’s capabilities beyond simple knowledge retrieval.</p>
+
+<hr>
+
+<h3 id="step-by-step-instructions-2">Step-by-step instructions<a class="header-link" href="#step-by-step-instructions-2" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h3>
+
+<h4 id="navigate-to-tools">Navigate to Tools<a class="header-link" href="#navigate-to-tools" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h4>
+
+<ol>
+  <li>
+    <p>Open your Vestbjerg Maintenance Assistant agent (the one you created in Use Case #1).</p>
+  </li>
+  <li>
+    <p>Select <strong>Tools</strong> in the agent’s top navigation bar.</p>
+  </li>
+  <li>
+    <p>Select <strong>Add a tool</strong> and review the Tools page to understand the available options for creating new tools.</p>
+  </li>
+  <li>
+    <p>The Add tool dialog opens with a list of suggested connector actions. Either type <strong>MSN Weather</strong> in the search box at the top of the dialog (and press Enter), or click the <strong>Connector</strong> filter chip above the results table to narrow the list to connectors.</p>
+
+    <blockquote class="notice notice--info">
+      <p><strong>Note:</strong>
+The <strong>Create new</strong> tile list at the top of the dialog (Agent flow, Prompt, Model Context Protocol, Computer use) is for net-new tool types — not for selecting an existing connector. Use the search box or the <strong>Connector</strong> filter instead.</p>
+    </blockquote>
+  </li>
+  <li>
+    <p>In the <strong>MSN Weather</strong> connector section, select the <strong>Get current weather</strong> action.</p>
+  </li>
+  <li>
+    <p>The connector configuration page opens with a <strong>Connection</strong> field labeled <strong>Not connected</strong>. Click that button to open the connection picker, then select <strong>Create new connection</strong> from the popover.</p>
+  </li>
+  <li>
+    <p>When prompted, select <strong>Create</strong> to create the connection.</p>
+  </li>
+  <li>
+    <p>Select <strong>Add and configure</strong> to add this tool to the agent.</p>
+  </li>
+  <li>
+    <p>Configure authentication by expanding the Additional details section and selecting <strong>Maker-provided credentials</strong> in the Credentials to use option.</p>
+
+    <blockquote class="notice notice--warning">
+      <p><strong>Important:</strong>
+Maker credentials mean the tool authenticates using YOUR account. This is suitable for testing and internal tools. For production scenarios with end users, use connection references. For anonymous APIs and APIs that use API keys, you should also set these to maker-provided credentials so the connection is configured by the maker rather than requiring end users to authenticate.</p>
+    </blockquote>
+  </li>
+  <li>
+    <p>In the <strong>Inputs</strong> section, find the <strong>Units</strong> input. Change it from <strong>Fill with AI</strong> to <strong>Custom</strong>.</p>
+  </li>
+  <li>
+    <p>Click into the value field and select <strong>Imperial</strong> or <strong>Metric</strong> depending on your preference.</p>
+  </li>
+  <li>
+    <p>Review the tool configuration and select <strong>Save</strong>.</p>
+  </li>
+</ol>
+
+<h4 id="test-the-weather-tool">Test the Weather Tool<a class="header-link" href="#test-the-weather-tool" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h4>
+
+<ol>
+  <li>
+    <p>In the test panel on the right, start a new conversation by selecting the + icon in the upper right corner of the test panel.</p>
+  </li>
+  <li>
+    <p>Ask the following question:</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><button title="Copy to clipboard" class="clipboard-copy-button"><span class="sr-only">Copy code</span><i class="far fa-fw fa-copy"></i><i class="fas fa-fw fa-check copied"></i></button><code>What is the weather?
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>When the agent asks for a location, respond:</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><button title="Copy to clipboard" class="clipboard-copy-button"><span class="sr-only">Copy code</span><i class="far fa-fw fa-copy"></i><i class="fas fa-fw fa-check copied"></i></button><code>Orlando
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Review the weather information returned by the agent. Notice how it uses the tool to fetch real-time data. Also notice that the agent automatically used the <strong>Imperial</strong> or <strong>Metric</strong> unit you selected earlier without asking the user. This is because you set that input to a custom value instead of letting the AI fill it dynamically.</p>
+
+    <blockquote class="notice notice--success">
+      <p><strong>Tip:</strong>
+If the agent doesn’t use the tool automatically, check that the tool is enabled and that you’ve saved your agent configuration.</p>
+    </blockquote>
+  </li>
+</ol>
+
+<h4 id="create-a-custom-prompt-analyzer-tool">Create a Custom Raise Maintenance Request Tool<a class="header-link" href="#create-a-custom-prompt-analyzer-tool" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h4>
+
+<ol>
+  <li>
+    <p>Select <strong>Overview</strong> in the agent’s top navigation bar.</p>
+  </li>
+  <li>
+    <p>Scroll down to the <strong>Tools</strong> pane. This is the same list of tools from the agent’s top navigation bar  <strong>Tools</strong> option.</p>
+  </li>
+  <li>
+    <p>Select <strong>Add tool</strong> to add another tool.</p>
+  </li>
+  <li>
+    <p>In the <strong>Create new</strong> section, select <strong>Prompt</strong>.</p>
+
+    <blockquote class="notice notice--info">
+      <p><strong>Note:</strong>
+The first time you open the Prompt builder, a <strong>Define your intent</strong> product tour (1 of 3) appears as a coachmark overlay. Click <strong>X</strong> to dismiss it (or step through with <strong>Next</strong>) before continuing.</p>
+    </blockquote>
+  </li>
+  <li>
+    <p>Select the current name for example, <strong>Custom prompt…</strong> at the top left and change the name to <strong>Raise Maintenance Request</strong>.</p>
+  </li>
+  <li>
+    <p>In the <strong>Instructions</strong> section, add the following:</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><button title="Copy to clipboard" class="clipboard-copy-button"><span class="sr-only">Copy code</span><i class="far fa-fw fa-copy"></i><i class="fas fa-fw fa-check copied"></i></button><code>Raise a maintenance request for the fault the technician has described. Use the asset tag, a short summary, the full fault description in their own words, and choose a priority of Routine, Urgent or Safety based on what they said. Read the drafted request back and wait for confirmation before submitting it.
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>In the instructions you just pasted select ** (replace with text)**.</p>
+  </li>
+  <li>
+    <p>With ** (replace with text)** still selected, in the lower left of the dialog, select <strong>Add content</strong></p>
+  </li>
+  <li>
+    <p>Select <strong>Text</strong> from the list of content types.</p>
+  </li>
+  <li>
+    <p>Enter <strong>PromptToAnalyze</strong> for the name.</p>
+  </li>
+  <li>
+    <p>Enter <strong>Summarize this text: “Text”</strong> for the sample data.  This will be used to test the prompt.</p>
+  </li>
+  <li>
+    <p>Select <strong>Close</strong>.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Test</strong> button to test the Raise Maintenance Request prompt you just built.</p>
+  </li>
+  <li>
+    <p>In the <strong>Model response</strong> pane on the right review the model response from your test.</p>
+  </li>
+  <li>
+    <p>Select <strong>Save</strong> in the lower right to create the prompt tool.</p>
+  </li>
+  <li>
+    <p>On the Add tool dialog, select <strong>Add and configure</strong>.</p>
+  </li>
+  <li>
+    <p>Update the <strong>Description</strong> of the Raise Maintenance Request tool to the following:</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><button title="Copy to clipboard" class="clipboard-copy-button"><span class="sr-only">Copy code</span><i class="far fa-fw fa-copy"></i><i class="fas fa-fw fa-check copied"></i></button><code>Raises a maintenance request when a technician reports a fault that is not covered by the current work order. Use this only when the technician is describing something newly found, not when they are asking a question.
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Select <strong>Save</strong>.</p>
+  </li>
+</ol>
+
+<h4 id="add-agent-level-tool-instructions">Add Agent-Level Tool Instructions<a class="header-link" href="#add-agent-level-tool-instructions" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h4>
+
+<ol>
+  <li>
+    <p>Select the <strong>Overview</strong> tab in the top navigation bar for the agent.</p>
+  </li>
+  <li>
+    <p>In the Instructions pane, select <strong>Edit</strong></p>
+  </li>
+  <li>
+    <p>Copy and paste the following after <strong>General Guidelines</strong> and before <strong>Skills</strong>.</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><button title="Copy to clipboard" class="clipboard-copy-button"><span class="sr-only">Copy code</span><i class="far fa-fw fa-copy"></i><i class="fas fa-fw fa-check copied"></i></button><code># Raising a maintenance request
+Use the Raise Maintenance Request tool when a technician reports a fault that the current work order does not cover. Always confirm the asset tag before submitting. Read the drafted request back to the technician and wait for them to confirm it. Never submit without confirmation.
+</code></pre></div>    </div>
+
+    <blockquote class="notice notice--warning">
+      <p><strong>Important:</strong>
+Agent-level instructions help the agent understand context and avoid confusion - especially when tools might be misused or misinterpreted.</p>
+    </blockquote>
+  </li>
+  <li>
+    <p>In the text you just pasted, where select <strong>Raise Maintenance Request</strong> after the <strong>Use</strong> at the beginning of what you just pasted, type / and it will bring up a dialog to select the <strong>Raise Maintenance Request</strong> tool.</p>
+  </li>
+  <li>
+    <p>Select <strong>Save</strong>.</p>
+  </li>
+</ol>
+
+<h4 id="test-the-prompt-analyzer-tool">Test the Raise Maintenance Request Tool<a class="header-link" href="#test-the-prompt-analyzer-tool" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h4>
+
+<ol>
+  <li>
+    <p>In the test panel, select <strong>Refresh</strong> or start a new conversation to reload the agent with the new tool.</p>
+  </li>
+  <li>
+    <p>Enter the following test request:</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><button title="Copy to clipboard" class="clipboard-copy-button"><span class="sr-only">Copy code</span><i class="far fa-fw fa-copy"></i><i class="fas fa-fw fa-check copied"></i></button><code>I have the cover off P-207 and the mechanical seal is damaged. It is not on the work order. The pump has been noisier than usual for a couple of days.
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Review the agent’s analysis. It should provide structured feedback on the prompt using the CARE framework.</p>
+  </li>
+  <li>
+    <p>Observe how the tool uses markdown formatting with bold text and bullets to make the response visually appealing.</p>
+  </li>
+</ol>
+
+<hr>
+
+<h3 id="congratulations-youve-completed-use-case-3">Congratulations! You’ve completed Use Case 3!<a class="header-link" href="#congratulations-youve-completed-use-case-3" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h3>
+
+<hr>
+
+<h3 id="test-your-understanding-2">Test your understanding<a class="header-link" href="#test-your-understanding-2" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h3>
+
+<p><strong>Key takeaways:</strong></p>
+
+<ul>
+  <li><strong>Connector Tools Provide Real-Time Data</strong> – Pre-built connectors offer instant access to external services without API development</li>
+  <li><strong>Prompts Enable Specialized Actions</strong> – Build purpose-built tools with custom prompts and inputs for unique business requirements</li>
+  <li><strong>Agent Instructions Guide Tool Usage</strong> – Clear agent-level instructions prevent tool misuse and ensure proper context</li>
+</ul>
+
+<p><strong>Lessons learned &amp; troubleshooting tips:</strong></p>
+
+<ul>
+  <li>If a tool doesn’t trigger, check that it’s enabled and that the agent has clear instructions about when to use it</li>
+  <li>Input descriptions are crucial - they guide the agent on WHEN to collect information and WHAT to ask for</li>
+  <li>Test tools with various phrasings to ensure the agent recognizes different ways users might request the action</li>
+</ul>
+
+<p><strong>Challenge: Apply this to your own use case</strong></p>
+
+<ul>
+  <li>What external services or APIs would enhance your agent’s capabilities?</li>
+  <li>What specialized analysis or processing would help your users?</li>
+  <li>How would you describe tool inputs to ensure the agent collects the right information?</li>
+</ul>
+
+<hr>
+
+<hr>
+
+<h2 id="use-case-4-build-custom-topics-for-structured-conversations">Use Case #4: Build Custom Topics for Structured Conversations<a class="header-link" href="#use-case-4-build-custom-topics-for-structured-conversations" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h2><div style="border-left:4px solid #FF831D;background:#F8F8F8;padding:12px 16px;margin:16px 0;font-family:Arial,sans-serif;font-size:0.95em;"><strong style="color:#02018C;">Columbus note</strong><br>This use case is not part of the Agent in a Day workshop. Topics were removed from the new Copilot Studio authoring experience in June 2026 — they still exist in the standard harness, so this is kept for reference, but it is not how you would build this today. The scenario also stays as Microsoft wrote it.</div>
+
+<p>Create structured conversation flows with triggers, nodes, and logic to handle specific user intents like mailing list signups.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Use case</th>
+      <th>Value added</th>
+      <th>Estimated effort</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Build Custom Topics for Structured Conversations</td>
+      <td>Create structured conversation flows that handle specific user intents and workflows</td>
+      <td>12 minutes</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Summary of tasks</strong></p>
+
+<p>In this section, you’ll learn how to create topics using natural language descriptions, explore topic nodes and triggers, and understand how topics structure conversations.</p>
+
+<p><strong>Scenario:</strong> Users want to join a Copilot Studio mailing list to receive announcements. You’ll create a topic that collects their email, first name, and last name, then demonstrates how this could connect to a backend system for actual submission.</p>
+
+<h3 id="objective-3">Objective<a class="header-link" href="#objective-3" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h3>
+
+<p>Create a custom topic that handles a specific user intent (mailing list signup) with structured data collection.</p>
+
+<hr>
+
+<h3 id="step-by-step-instructions-3">Step-by-step instructions<a class="header-link" href="#step-by-step-instructions-3" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h3>
+
+<h4 id="create-a-topic-with-description">Create a Topic with Description<a class="header-link" href="#create-a-topic-with-description" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h4>
+
+<ol>
+  <li>
+    <p>In your Copilot Studio agent, select <strong>Topics</strong> in the top navigation bar.</p>
+  </li>
+  <li>
+    <p>Select <strong>+ Add a topic</strong>.</p>
+  </li>
+  <li>
+    <p>Select <strong>Add from description with Copilot</strong>.</p>
+  </li>
+  <li>
+    <p>Enter <strong>Join Copilot Studio Mailing List</strong> for the name of your topic.</p>
+  </li>
+  <li>
+    <p>Enter the following description in the <strong>Create a topic to…</strong>:</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><button title="Copy to clipboard" class="clipboard-copy-button"><span class="sr-only">Copy code</span><i class="far fa-fw fa-copy"></i><i class="fas fa-fw fa-check copied"></i></button><code>Join Copilot Studio Mailing List. Let the user provide their email address, first and last name to be added to the email mailing list for copilot studio announcements.
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Select <strong>Create</strong> to let Copilot Studio build the topic structure.</p>
+  </li>
+  <li>Review the generated topic. Notice how Copilot Studio creates:
+    <ul>
+      <li>A trigger phrase</li>
+      <li>Question nodes to collect email, first name, and last name</li>
+      <li>Message nodes to confirm actions</li>
+    </ul>
+
+    <blockquote class="notice notice--success">
+      <p><strong>Tip:</strong>
+Creating topics from descriptions is the fastest way to build conversation flows. Copilot Studio uses AI to generate the structure based on your natural language description.</p>
+    </blockquote>
+  </li>
+  <li>
+    <p>Select <strong>Save</strong> in the upper corner of the topic design pane to save the current progress of the topic.</p>
+  </li>
+  <li>Review the topic canvas and identify the different node types:
+    <ul>
+      <li><strong>Trigger node</strong>: Defines what phrases activate this topic</li>
+      <li><strong>Message nodes</strong>: Display text to the user</li>
+      <li><strong>Question nodes</strong>: Collect input from users</li>
+      <li><strong>Condition nodes</strong>: Create branching logic</li>
+      <li><strong>Action nodes</strong>: Call flows, tools, or connectors</li>
+    </ul>
+  </li>
+  <li>Select the <strong>+</strong> button between nodes to see all available node options:
+    <ul>
+      <li>Send a message</li>
+      <li>Ask a question</li>
+      <li>Add a condition</li>
+      <li>Call a tool</li>
+      <li>Call a flow</li>
+      <li>Set a variable</li>
+      <li>End the conversation</li>
+    </ul>
+
+    <blockquote class="notice notice--info">
+      <p><strong>Note:</strong>
+Understanding node types is essential for building sophisticated conversation flows. Each node type serves a specific purpose in the conversation logic.</p>
+    </blockquote>
+  </li>
+  <li>Notice that you could select:
+    <ul>
+      <li><strong>Power Automate Flow</strong> (to submit data to a backend system)</li>
+      <li><strong>Connector</strong> (to write directly to a database or service)</li>
+      <li><strong>Tool</strong> (to process the collected data)</li>
+    </ul>
+
+    <blockquote class="notice notice--warning">
+      <p><strong>Important:</strong>
+For production scenarios, you would connect to a real backend system here. For this lab, we’re demonstrating the concept without actual submission.</p>
+    </blockquote>
+  </li>
+  <li>
+    <p>Check your nodes and if you don’t already have a node that thanks the user then select + after the last node and select a <strong>Message</strong> node.</p>
+  </li>
+  <li>
+    <p>Enter the following as the message:</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><button title="Copy to clipboard" class="clipboard-copy-button"><span class="sr-only">Copy code</span><i class="far fa-fw fa-copy"></i><i class="fas fa-fw fa-check copied"></i></button><code>Thank you! Your information has been recorded. (In production, this would submit to the mailing list system.)
+</code></pre></div>    </div>
+  </li>
+  <li>Select <strong>Save</strong> to save your topic.</li>
+</ol>
+
+<h4 id="test-the-mailing-list-topic">Test the Mailing List Topic<a class="header-link" href="#test-the-mailing-list-topic" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h4>
+
+<ol>
+  <li>
+    <p>In the test panel, start a new conversation.</p>
+  </li>
+  <li>
+    <p>Enter the following trigger phrase:</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><button title="Copy to clipboard" class="clipboard-copy-button"><span class="sr-only">Copy code</span><i class="far fa-fw fa-copy"></i><i class="fas fa-fw fa-check copied"></i></button><code>I want to get notified when there is news about Copilot Studio.
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>The agent should recognize this intent and activate your mailing list topic.</p>
+  </li>
+  <li>Follow the conversation flow:
+    <ul>
+      <li>Provide an email address when asked</li>
+      <li>Provide your first name</li>
+      <li>Provide your last name</li>
+    </ul>
+  </li>
+  <li>Observe how the agent guides you through the structured flow and confirms the submission.</li>
+</ol>
+
+<h3 id="congratulations-youve-completed-use-case-4">Congratulations! You’ve completed Use Case 4!<a class="header-link" href="#congratulations-youve-completed-use-case-4" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h3>
+
+<hr>
+
+<h3 id="test-your-understanding-3">Test your understanding<a class="header-link" href="#test-your-understanding-3" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h3>
+
+<ul>
+  <li>How do triggers determine when a topic activates?</li>
+  <li>When would you create a topic from description vs. from blank?</li>
+  <li>What node type would you use to submit data to an external system?</li>
+</ul>
+
+<p><strong>Challenge: Apply this to your own use case</strong></p>
+
+<ul>
+  <li>What structured workflows exist in your organization that could become topics?</li>
+  <li>How would you design a multi-step approval or request process as a topic?</li>
+  <li>What external systems would you connect to for data submission or retrieval?</li>
+</ul>
+
+<hr>
+
+<h2 id="summary-of-learnings">Summary of learnings<a class="header-link" href="#summary-of-learnings" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h2>
+
+<p>True learning comes from doing, questioning, and reflecting—so let’s put your skills to the test.</p>
+
+<p>To maximize the impact of your Copilot Studio agents:</p>
+
+<ul>
+  <li><strong>Start with Clear Instructions</strong> – Well-defined agent instructions act as the foundation for all interactions. Take time to articulate the agent’s role, expertise, and tone before launching.</li>
+  <li><strong>Ground Responses in Knowledge</strong> – Generic AI responses lack credibility. Always connect agents to authoritative knowledge sources to provide accurate, verifiable answers.</li>
+  <li><strong>Extend with Tools</strong> – Use tools to connect to external services, APIs, and connectors. This transforms knowledge-based agents into action-oriented assistants that can fetch real-time data and perform specialized analysis.</li>
+  <li><strong>Structure with Topics</strong> – Use topics to create predictable, guided conversation flows for specific user intents and workflows. Well-crafted trigger phrases ensure your agent activates the right topic at the right time.</li>
+  <li><strong>Test Thoroughly</strong> – Test your agent across all capabilities - knowledge queries, tool invocations, and topic flows - before deployment. Verify that each component works individually and together.</li>
+</ul>
+
+<hr>
+
+<h3 id="conclusions-and-recommendations">Conclusions and recommendations<a class="header-link" href="#conclusions-and-recommendations" title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h3>
+
+<p><strong>Agent building golden rules:</strong></p>
+
+<ul>
+  <li>Always define clear, specific instructions that describe the agent’s role and expertise</li>
+  <li>Select Claude Sonnet 4.6 for scenarios where accuracy and quality matter most</li>
+  <li>Upload multiple knowledge sources to cover different aspects of your domain</li>
+  <li>Provide clear descriptions for tool inputs - these guide the agent on when and how to collect information</li>
+  <li>Use agent-level instructions to provide context about tool usage and prevent misuse</li>
+  <li>Create topics from descriptions for speed, then refine manually for precision</li>
+  <li>Test with various user phrasings to ensure reliable trigger recognition across tools and topics</li>
+</ul>
+
+<p>By following these principles, you’ll build AI agents that not only answer questions but also take action - integrating with your organization’s systems and workflows to deliver real business value through conversational AI.</p>
+
+<hr>
+
+
+<!-- Bottom Previous / Next lab cards. Rendered at the end of the lab content
+     by _layouts/lab.html. Hidden by default; the event-nav IIFE unhides +
+     populates when an active event context is resolved. -->
+<nav class="event-navpair" id="event-navpair" aria-label="Previous and next lab">
+  <a class="event-navpair-card event-navpair-prev" id="event-navpair-prev" href="https://microsoft.github.io/mcs-labs/labs/agent-builder-m365/?event=agent-in-a-day">
+    <span class="event-navpair-dir">‹&nbsp;Previous</span>
+    <span class="event-navpair-title" id="event-navpair-prev-title">M365 Agent Builder</span>
+    <span class="event-navpair-desc" id="event-navpair-prev-desc">Lab 1</span>
+  </a>
+  <a class="event-navpair-card event-navpair-next" id="event-navpair-next" href="https://microsoft.github.io/mcs-labs/labs/core-concepts-variables-agents-channels/?event=agent-in-a-day">
+    <span class="event-navpair-dir">Next&nbsp;›</span>
+    <span class="event-navpair-title" id="event-navpair-next-title">Variables, Agents, and Channels</span>
+    <span class="event-navpair-desc" id="event-navpair-next-desc">Lab 3</span>
+  </a>
+</nav>
+
+
+<script>
+(function () {
+  'use strict';
+
+  var STORAGE_KEY = 'mcs-labs.event-context.v1';
+
+  // --- DOM refs ---
+  var manifestEl = document.getElementById('mcs-events-manifest');
+  var contextEl = document.getElementById('mcs-lab-context');
+  if (!manifestEl || !contextEl) return;
+
+  var rail = document.getElementById('event-rail');
+  var railEventLink = document.getElementById('event-rail-event');
+  var railEventName = document.getElementById('event-rail-event-name');
+  var railPosition = document.getElementById('event-rail-position');
+  var prevBtn = document.getElementById('event-rail-prev');
+  var nextBtn = document.getElementById('event-rail-next');
+  var expandBtn = document.getElementById('event-rail-expand');
+  var exitBtn = document.getElementById('event-rail-exit');
+  var agendaPanel = document.getElementById('event-rail-agenda');
+  var agendaList = document.getElementById('event-rail-agenda-list');
+
+  var navpair = document.getElementById('event-navpair');
+  var prevCard = document.getElementById('event-navpair-prev');
+  var prevCardTitle = document.getElementById('event-navpair-prev-title');
+  var prevCardDesc = document.getElementById('event-navpair-prev-desc');
+  var nextCard = document.getElementById('event-navpair-next');
+  var nextCardTitle = document.getElementById('event-navpair-next-title');
+  var nextCardDesc = document.getElementById('event-navpair-next-desc');
+
+  // The rail/nav-pair markup is required for the in-page navigation chrome.
+  // (The breadcrumb override below works independently and tolerates either
+  // the theme breadcrumb or the module page's custom one.)
+  if (!rail) return;
+
+  var breadcrumbsNav = document.querySelector('nav.breadcrumbs ol');
+  var modBreadcrumb = document.querySelector('nav.mod-breadcrumb');
+
+  // --- Parse payloads ---
+  var events;
+  var current;
+  try {
+    events = JSON.parse(manifestEl.textContent);
+    current = JSON.parse(contextEl.textContent);
+  } catch (e) {
+    return;
+  }
+  if (!Array.isArray(events) || !current || !current.slug) return;
+
+  // The current page is either a lab or a module; the rail walks the matching
+  // item type within the event so a module page gets "Module X of N" with
+  // prev/next across modules, exactly mirroring the lab experience.
+  var currentType = current.type === 'module' ? 'module' : 'lab';
+  var typeWord = currentType === 'module' ? 'Module' : 'Lab';
+  var typeWordLower = currentType === 'module' ? 'module' : 'lab';
+
+  function findEvent(eventId) {
+    if (!eventId) return null;
+    for (var i = 0; i < events.length; i++) {
+      if (events[i].event_id === eventId) return events[i];
+    }
+    return null;
+  }
+
+  // --- URL construction helpers ---
+  // All URLs embedded in the manifest come from Jekyll build output and are
+  // therefore trusted, but every href/location write still goes through the
+  // URL constructor so that (a) a javascript: URL can never sneak through
+  // and (b) CodeQL's xss-through-dom taint analysis sees a recognized
+  // sanitizer at every sink.
+  function buildItemUrl(itemUrl, eventId) {
+    try {
+      var u = new URL(String(itemUrl || ''), window.location.origin);
+      if (u.origin !== window.location.origin) return null;
+      if (u.protocol !== 'http:' && u.protocol !== 'https:') return null;
+      u.searchParams.set('event', String(eventId || ''));
+      return u;
+    } catch (e) { return null; }
+  }
+  function buildSameOriginUrl(candidate) {
+    try {
+      var u = new URL(String(candidate || ''), window.location.origin);
+      if (u.origin !== window.location.origin) return null;
+      if (u.protocol !== 'http:' && u.protocol !== 'https:') return null;
+      return u;
+    } catch (e) { return null; }
+  }
+  // URL.href on a constructed URL is always safe — it serializes a parsed
+  // origin + pathname + search + hash that can't be `javascript:`.
+  function urlHrefOr(url, fallback) {
+    return url ? url.href : (fallback || '#');
+  }
+
+  function eventContainsItem(event, type, slug) {
+    if (!event || !event.schedule) return false;
+    for (var i = 0; i < event.schedule.length; i++) {
+      var item = event.schedule[i];
+      if (item.type === type && item.slug === slug) return true;
+    }
+    return false;
+  }
+
+  // --- Resolve active event ---
+  // Priority: URL ?event= wins, then sessionStorage, but only if the stored
+  // event's schedule actually contains the current item. Otherwise we clear
+  // stale sticky context and render a neutral page.
+  function readUrlEvent() {
+    try {
+      var q = new URLSearchParams(window.location.search);
+      return q.get('event');
+    } catch (e) { return null; }
+  }
+
+  var urlEventId = readUrlEvent();
+  var stickyEventId = null;
+  try { stickyEventId = sessionStorage.getItem(STORAGE_KEY); } catch (e) {}
+
+  var activeEvent = null;
+  if (urlEventId) {
+    activeEvent = findEvent(urlEventId);
+    if (activeEvent && eventContainsItem(activeEvent, currentType, current.slug)) {
+      try { sessionStorage.setItem(STORAGE_KEY, urlEventId); } catch (e) {}
+    } else {
+      activeEvent = null; // URL param references an unknown event or an item
+                          // not in that event — bail out silently.
+    }
+  } else if (stickyEventId) {
+    var stickyEvent = findEvent(stickyEventId);
+    if (stickyEvent && eventContainsItem(stickyEvent, currentType, current.slug)) {
+      activeEvent = stickyEvent;
+    } else {
+      try { sessionStorage.removeItem(STORAGE_KEY); } catch (e) {}
+    }
+  }
+
+  if (!activeEvent) return; // Leave the page neutral.
+
+  // --- Build item index within the event (over the current page's type) ---
+  var itemsInEvent = activeEvent.schedule.filter(function (item) { return item.type === currentType; });
+  var currentIdx = -1;
+  for (var i = 0; i < itemsInEvent.length; i++) {
+    if (itemsInEvent[i].slug === current.slug) { currentIdx = i; break; }
+  }
+  if (currentIdx === -1) return; // Defensive; eventContainsItem already checked.
+
+  // --- Event-specific deck override -------------------------------------
+  // Module pages render their download from page.slides, which is the
+  // module's own deck. An event agenda may override it (V3 reuses the
+  // Workflows and Multi-Agent modules but ships V3 decks). When an event
+  // context is active and its row overrides the deck, repoint the link so
+  // following a V3 agenda link never hands the reader a V2 deck.
+  if (currentType === 'module') {
+    var eventSlides = itemsInEvent[currentIdx] && itemsInEvent[currentIdx].slides;
+    if (eventSlides) {
+      var slidesLink = document.querySelector('a.mod-button[download]');
+      if (slidesLink) { slidesLink.href = eventSlides; }
+    }
+  }
+
+  var prevItem = currentIdx > 0 ? itemsInEvent[currentIdx - 1] : null;
+  var nextItem = currentIdx < itemsInEvent.length - 1 ? itemsInEvent[currentIdx + 1] : null;
+
+  var activeEventUrl = buildSameOriginUrl(activeEvent.url);
+
+  // --- Populate rail head ---
+  var kindLabel = activeEvent.kind === 'workshop' ? 'Workshop' : 'Event';
+  var kindLabelEl = document.querySelector('.event-rail-event-label');
+  if (kindLabelEl) kindLabelEl.textContent = kindLabel;
+  railEventLink.href = urlHrefOr(activeEventUrl);
+  railEventName.textContent = activeEvent.title;
+  railPosition.textContent = typeWord + ' ' + (currentIdx + 1) + ' of ' + itemsInEvent.length;
+
+  var prevItemUrl = prevItem ? buildItemUrl(prevItem.url, activeEvent.event_id) : null;
+  var nextItemUrl = nextItem ? buildItemUrl(nextItem.url, activeEvent.event_id) : null;
+
+  if (prevItem && prevItemUrl) {
+    prevBtn.removeAttribute('disabled');
+    prevBtn.setAttribute('aria-label', 'Previous ' + typeWordLower + ': ' + prevItem.title);
+    prevBtn.addEventListener('click', function () {
+      window.location.assign(prevItemUrl.href);
+    });
+  } else {
+    prevBtn.setAttribute('disabled', '');
+    prevBtn.setAttribute('aria-label', 'No previous ' + typeWordLower);
+  }
+
+  if (nextItem && nextItemUrl) {
+    nextBtn.removeAttribute('disabled');
+    nextBtn.setAttribute('aria-label', 'Next ' + typeWordLower + ': ' + nextItem.title);
+    nextBtn.addEventListener('click', function () {
+      window.location.assign(nextItemUrl.href);
+    });
+  } else {
+    nextBtn.setAttribute('disabled', '');
+    nextBtn.setAttribute('aria-label', 'Back to ' + activeEvent.title);
+    // When at the last item, Next goes back to the event overview.
+    nextBtn.removeAttribute('disabled');
+    nextBtn.addEventListener('click', function () {
+      if (activeEventUrl) window.location.assign(activeEventUrl.href);
+    });
+  }
+
+  // --- Populate bottom nav-pair cards ---
+  if (navpair && prevCard && nextCard) {
+    if (prevItem && prevItemUrl) {
+      prevCard.href = prevItemUrl.href;
+      prevCardTitle.textContent = prevItem.title;
+      prevCardDesc.textContent = prevItem.label || (typeWord + ' ' + currentIdx);
+    } else {
+      prevCard.href = urlHrefOr(activeEventUrl);
+      prevCardTitle.textContent = 'Back to ' + activeEvent.title;
+      prevCardDesc.textContent = 'Event overview';
+    }
+    if (nextItem && nextItemUrl) {
+      nextCard.href = nextItemUrl.href;
+      nextCardTitle.textContent = nextItem.title;
+      nextCardDesc.textContent = nextItem.label || (typeWord + ' ' + (currentIdx + 2));
+    } else {
+      nextCard.href = urlHrefOr(activeEventUrl);
+      nextCardTitle.textContent = 'Finish ' + activeEvent.title;
+      nextCardDesc.textContent = 'Event overview';
+    }
+  }
+
+  // --- Populate agenda popover ---
+  var frag = document.createDocumentFragment();
+  for (var j = 0; j < activeEvent.schedule.length; j++) {
+    var item = activeEvent.schedule[j];
+    var li = document.createElement('li');
+    li.className = 'event-agenda-row event-agenda-row--' + item.type;
+
+    // Day rows render as a full-width section header (no time/body/duration).
+    if (item.type === 'day') {
+      li.textContent = item.title;
+      frag.appendChild(li);
+      continue;
+    }
+
+    var timeCell = document.createElement('span');
+    timeCell.className = 'event-agenda-time';
+    timeCell.textContent = item.time || '';
+    var bodyCell = document.createElement('span');
+    bodyCell.className = 'event-agenda-body';
+
+    if (item.type === 'lab' || item.type === 'module') {
+      // Both labs and modules are first-class destinations; render them as
+      // links that carry the event context so navigation stays in-event.
+      var itemUrl = buildItemUrl(item.url, activeEvent.event_id);
+      var a = document.createElement('a');
+      a.href = urlHrefOr(itemUrl);
+      a.textContent = (item.label ? item.label + ': ' : '') + item.title;
+      if (item.type === currentType && item.slug === current.slug) {
+        a.setAttribute('aria-current', 'page');
+        li.classList.add('event-agenda-row--current');
+      }
+      bodyCell.appendChild(a);
+    } else if (item.type === 'link' && item.url) {
+      // External "link" items may point to any http/https URL. Use the URL
+      // constructor to parse and normalize; reject anything that isn't
+      // http(s) (e.g. a `javascript:` string).
+      var extA = document.createElement('a');
+      var extHref = '#';
+      try {
+        var extU = new URL(String(item.url || ''), window.location.origin);
+        if (extU.protocol === 'https:' || extU.protocol === 'http:') extHref = extU.href;
+      } catch (e) {}
+      extA.href = extHref;
+      extA.target = '_blank';
+      extA.rel = 'noopener noreferrer';
+      extA.textContent = item.title;
+      bodyCell.appendChild(extA);
+    } else {
+      bodyCell.textContent = item.title;
+    }
+
+    if (item.description) {
+      var desc = document.createElement('span');
+      desc.className = 'event-agenda-desc';
+      desc.textContent = item.description;
+      bodyCell.appendChild(desc);
+    }
+
+    var durCell = document.createElement('span');
+    durCell.className = 'event-agenda-duration';
+    if (item.duration) durCell.textContent = item.duration + ' min';
+
+    li.appendChild(timeCell);
+    li.appendChild(bodyCell);
+    li.appendChild(durCell);
+    frag.appendChild(li);
+  }
+  agendaList.innerHTML = '';
+  agendaList.appendChild(frag);
+
+  // --- Expand / collapse agenda ---
+  function setExpanded(open) {
+    expandBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open) {
+      agendaPanel.hidden = false;
+      // Scroll the current row into view inside the popover.
+      var currentRow = agendaList.querySelector('.event-agenda-row--current');
+      if (currentRow) currentRow.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    } else {
+      agendaPanel.hidden = true;
+    }
+  }
+  expandBtn.addEventListener('click', function () {
+    setExpanded(expandBtn.getAttribute('aria-expanded') !== 'true');
+  });
+
+  // Outside click closes the popover.
+  document.addEventListener('click', function (e) {
+    if (expandBtn.getAttribute('aria-expanded') !== 'true') return;
+    if (rail.contains(e.target)) return;
+    setExpanded(false);
+  });
+  // Esc closes + returns focus to the expand button.
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && expandBtn.getAttribute('aria-expanded') === 'true') {
+      setExpanded(false);
+      expandBtn.focus();
+    }
+  });
+
+  // --- Exit event context ---
+  exitBtn.addEventListener('click', function () {
+    try { sessionStorage.removeItem(STORAGE_KEY); } catch (e) {}
+    // Strip ?event= from the URL without a navigation.
+    try {
+      var url = new URL(window.location.href);
+      url.searchParams.delete('event');
+      history.replaceState(null, '', url.toString());
+    } catch (e) {}
+    rail.hidden = true;
+    if (navpair) navpair.hidden = true;
+    delete document.documentElement.dataset.eventContext;
+    restoreBreadcrumb();
+  });
+
+  // --- Breadcrumb override ---
+  // Replaces the default breadcrumb with "Home / Events|Workshops / <Event
+  // Name> / <Item Title>". Works with either the theme breadcrumb
+  // (nav.breadcrumbs ol, used by lab pages) or the module page's custom
+  // nav.mod-breadcrumb. Silent no-op if neither is present.
+  //
+  // Built entirely via document.createElement + textContent so no string
+  // concatenation flows into innerHTML — the XSS-through-DOM sink is
+  // removed structurally rather than relying on escaping.
+  var originalBreadcrumbChildren = null;
+  var breadcrumbTarget = breadcrumbsNav || modBreadcrumb;
+
+  function snapshotAndClear(el) {
+    originalBreadcrumbChildren = [];
+    while (el.firstChild) {
+      originalBreadcrumbChildren.push(el.firstChild);
+      el.removeChild(el.firstChild);
+    }
+  }
+
+  function overrideThemeBreadcrumb() {
+    snapshotAndClear(breadcrumbsNav);
+
+    var baseurl = '';
+    for (var i = 0; i < originalBreadcrumbChildren.length; i++) {
+      var anchor = originalBreadcrumbChildren[i].querySelector
+        ? originalBreadcrumbChildren[i].querySelector('a')
+        : null;
+      if (anchor) {
+        try {
+          var parsed = new URL(anchor.href, window.location.origin);
+          baseurl = parsed.pathname.replace(/\/$/, '');
+        } catch (e) {}
+        break;
+      }
+    }
+
+    function makeCrumbLi(urlObj, text, position) {
+      var li = document.createElement('li');
+      li.setAttribute('itemprop', 'itemListElement');
+      li.setAttribute('itemscope', '');
+      li.setAttribute('itemtype', 'https://schema.org/ListItem');
+      var a = document.createElement('a');
+      a.href = urlHrefOr(urlObj);
+      a.setAttribute('itemprop', 'item');
+      var span = document.createElement('span');
+      span.setAttribute('itemprop', 'name');
+      span.textContent = text;
+      a.appendChild(span);
+      li.appendChild(a);
+      var meta = document.createElement('meta');
+      meta.setAttribute('itemprop', 'position');
+      meta.setAttribute('content', String(position));
+      li.appendChild(meta);
+      return li;
+    }
+
+    var kindPlural = activeEvent.kind === 'workshop' ? 'Workshops' : 'Events';
+    var kindPath = activeEvent.kind === 'workshop' ? '/workshops/' : '/events/';
+    breadcrumbsNav.appendChild(makeCrumbLi(buildSameOriginUrl(baseurl + '/'), 'Home', 1));
+    breadcrumbsNav.appendChild(makeCrumbLi(buildSameOriginUrl(baseurl + kindPath), kindPlural, 2));
+    breadcrumbsNav.appendChild(makeCrumbLi(activeEventUrl, activeEvent.title, 3));
+
+    var currentLi = document.createElement('li');
+    currentLi.className = 'current';
+    currentLi.textContent = current.title;
+    breadcrumbsNav.appendChild(currentLi);
+  }
+
+  function overrideModuleBreadcrumb() {
+    snapshotAndClear(modBreadcrumb);
+
+    var rootLink = document.createElement('a');
+    rootLink.href = urlHrefOr(activeEventUrl);
+    rootLink.textContent = activeEvent.title;
+    modBreadcrumb.appendChild(rootLink);
+
+    var sep = document.createElement('span');
+    sep.setAttribute('aria-hidden', 'true');
+    sep.textContent = '/';
+    modBreadcrumb.appendChild(sep);
+
+    var currentSpan = document.createElement('span');
+    currentSpan.className = 'mod-breadcrumb-current';
+    currentSpan.textContent = current.title;
+    modBreadcrumb.appendChild(currentSpan);
+  }
+
+  function overrideBreadcrumb() {
+    if (breadcrumbsNav) {
+      overrideThemeBreadcrumb();
+    } else if (modBreadcrumb) {
+      overrideModuleBreadcrumb();
+    }
+  }
+  function restoreBreadcrumb() {
+    if (!breadcrumbTarget || originalBreadcrumbChildren === null) return;
+    while (breadcrumbTarget.firstChild) breadcrumbTarget.removeChild(breadcrumbTarget.firstChild);
+    for (var i = 0; i < originalBreadcrumbChildren.length; i++) {
+      breadcrumbTarget.appendChild(originalBreadcrumbChildren[i]);
+    }
+  }
+
+  // --- Reveal the rail + nav-pair ---
+  document.documentElement.dataset.eventContext = activeEvent.event_id;
+  rail.hidden = false;
+  if (navpair) navpair.hidden = false;
+  overrideBreadcrumb();
+})();
+</script>
+
+
+<!-- Back-to-top button: appears once the user has scrolled past a threshold,
+     scrolls smoothly to the top on click. Hidden by default via the `hidden`
+     attribute — the IIFE toggles it based on scroll position. -->
+<button type="button" class="back-to-top" id="backToTop" aria-label="Back to top of page" hidden="">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+    <line x1="12" y1="19" x2="12" y2="5"></line>
+    <polyline points="5 12 12 5 19 12"></polyline>
+  </svg>
+</button>
+<script>
+(function () {
+  var btn = document.getElementById('backToTop');
+  if (!btn) return;
+  var THRESHOLD = 400; // px scrolled before showing
+  var ticking = false;
+
+  function update() {
+    if (window.scrollY > THRESHOLD) btn.removeAttribute('hidden');
+    else btn.setAttribute('hidden', '');
+    ticking = false;
+  }
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(update);
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  btn.addEventListener('click', function () {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // Initial state in case the page loaded already-scrolled (e.g. via #anchor).
+  update();
+})();
+</script>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2026-10-25T21:20:21+00:00">October 25, 2026</time></p>
+
+      </footer>
+
+      
+
+      
+  
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+</div>
+
+      
+    </div>
+
+    
+      
+    
+
+    <button type="button" class="wc-tag" id="wcTag" aria-label="Open Lab Assistant chat" aria-expanded="false" aria-controls="wcPanel">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+  </svg>
+  <span class="wc-tag-label">Lab Assistant</span>
+</button><div class="wc-panel" id="wcPanel" role="dialog" aria-modal="false" aria-labelledby="wcPanelTitle" aria-hidden="true" inert="">
+  <!-- Header -->
+  <div class="wc-panel-header">
+    <div class="wc-panel-header-left">
+      <div class="wc-panel-header-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
+      </div>
+      <div>
+        <div class="wc-panel-header-title" id="wcPanelTitle">Lab Assistant</div>
+        <div class="wc-panel-header-status" id="wcStatus" aria-live="polite">Ready</div>
+      </div>
+    </div>
+    <div class="wc-panel-header-actions">
+      <button type="button" class="wc-panel-action" id="wcReset" aria-label="New conversation" title="New conversation">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+          <rect x="4" y="4" width="16" height="16" rx="3" ry="3"></rect>
+          <line x1="12" y1="8" x2="12" y2="16"></line>
+          <line x1="8" y1="12" x2="16" y2="12"></line>
+        </svg>
+      </button>
+      <button type="button" class="wc-panel-action wc-panel-close" id="wcClose" aria-label="Close Lab Assistant">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+          <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Body (WebChat renders here — transcript only, no sendbox) -->
+  <div class="wc-panel-body" id="wcBody">
+    <div class="wc-panel-loading" id="wcLoading" style="display: none;"></div>
+    <div class="wc-panel-error" id="wcError" style="display: none;" aria-live="assertive">
+      <span>Could not connect to the assistant.</span>
+      <button type="button" id="wcRetry">Try again</button>
+    </div>
+  </div>
+
+  <!-- Typing indicator -->
+  <div class="wc-typing" id="wcTyping" aria-hidden="true">
+    <div class="wc-typing-dots">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <!-- Quick replies (suggested actions). Rendered by script.html when an
+       incoming bot activity carries activity.suggestedActions.actions. We
+       build our own buttons here instead of letting Web Chat render its
+       built-in <SuggestedActions> inside <BasicSendBox>, because hiding
+       that subtree was the source of the duplicate-send-box bug. -->
+  <div class="wc-quickreplies" id="wcQuickReplies" role="group" aria-label="Quick replies" hidden=""></div>
+
+  <!-- Custom send box -->
+  <div class="wc-sendbox">
+    <label for="wcSendInput" class="visually-hidden">Message Lab Assistant</label>
+    <div class="wc-sendbox-inner">
+      <textarea id="wcSendInput" class="wc-sendbox-input" placeholder="Connecting..." rows="2" autocomplete="off" disabled=""></textarea>
+      <button type="button" id="wcSendBtn" class="wc-sendbox-btn" aria-label="Send message" disabled="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+          <path d="M5 12h14M12 5l7 7-7 7"></path>
+        </svg>
+      </button>
+    </div>
+    <div class="wc-sendbox-hint">Powered by Microsoft Copilot Studio</div>
+  </div>
+</div><div class="wc-nudge wc-nudge--dismissed" id="wcNudge" role="region" aria-label="Lab Assistant suggestion">
+  <button type="button" class="wc-nudge-body" id="wcNudgeBody" aria-label="Open Lab Assistant">
+    <span class="wc-nudge-emoji" aria-hidden="true">👋</span>
+    <span class="wc-nudge-text">Hi! I can help you get your account, find labs, or troubleshoot setup.</span>
+  </button>
+  <button type="button" class="wc-nudge-close" id="wcNudgeClose" aria-label="Dismiss suggestion">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+      <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
+    </svg>
+  </button>
+</div>
+
+    
+  <script src="assets/main.min.js.download"></script>
+
+
+
+
+<script src="assets/lunr.min.js.download"></script>
+<script src="assets/lunr-store.js.download"></script>
+<script src="assets/lunr-en.js.download"></script>
+
+
+
+
+
+
+  
+
+</body></html>
